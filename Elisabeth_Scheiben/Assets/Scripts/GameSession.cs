@@ -159,6 +159,7 @@ public class GameSession : MonoBehaviour
         private int timeAvailable;
         private int timeToButtonPress;
         private int buttonTarget;
+        private float timeToMouseButtonPress;
         private int targetCircle;
         public char fieldSeperator = ';'; // It defines field seperate chracter
 
@@ -170,12 +171,12 @@ public class GameSession : MonoBehaviour
             buttonTarget=bt;
             targetCircle = tc;
             timeAvailable=ta;
-            timeToButtonPress=timex;
+            timeToMouseButtonPress=timex;
         }
 
         public string getEntryString()
         {
-            string line = blockIdx.ToString() + fieldSeperator  + itemNumber.ToString() + fieldSeperator +  mouseButtonPressed.ToString() + fieldSeperator + buttonTarget.ToString() +fieldSeperator + targetCircle.ToString() + fieldSeperator + timeAvailable.ToString() + fieldSeperator + timeToButtonPress.ToString();
+            string line = blockIdx.ToString() + fieldSeperator  + itemNumber.ToString() + fieldSeperator +  mouseButtonPressed.ToString() + fieldSeperator + buttonTarget.ToString() +fieldSeperator + targetCircle.ToString() + fieldSeperator + timeAvailable.ToString() + fieldSeperator + timeToMouseButtonPress.ToString();
             return line;
         }
     }

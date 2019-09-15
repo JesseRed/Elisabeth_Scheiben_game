@@ -76,19 +76,24 @@ public class Movements : MonoBehaviour
         countdowntext.SetText("0");
         yield return new WaitForSeconds(1);
         waitpanel.SetActive(false);
-
+        float t = Time.time;
         for (int block_idx = 0; block_idx < gameSession.playerData.paradigma.numBlocks; block_idx++)
         {
             // print("block index = " + block_idx);
             for (int i = 0; i < gameSession.playerData.paradigma.numScheiben; i++)
-            {
+            {        
+                t = Time.time;
+                print(t);
                 // print("Sequence_index = " + i);
                 float timedelay = Random.Range(gameSession.playerData.paradigma.MinimumInterScheibenDelay, gameSession.playerData.paradigma.MaximumInterScheibenDelay) / 1000;
                 //StartCoroutine(CreateScheibe());
                 StartCoroutine(CreateScheibe());
                 yield return new WaitForSeconds(timedelay);
+
             }
-            gameSession.playerData.AddData(1,2,3,4,5,6,7,1.56f);
+            t = Time.time;
+            print(t);
+            gameSession.playerData.AddData(1,2,3,4,5,6,7,t);
             if (block_idx < gameSession.playerData.paradigma.numBlocks - 1)
             {
                 yield return new WaitForSeconds(4);
