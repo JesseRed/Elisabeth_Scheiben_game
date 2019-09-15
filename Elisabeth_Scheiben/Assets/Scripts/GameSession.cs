@@ -113,9 +113,9 @@ public class GameSession : MonoBehaviour
             playerTrackEntries = new List<PlayerTrackEntry>();
         }
 
-        public void AddData(int blockIdx, int seqNum, int itemNum, int bp, int bt, int tc, int ta, int timex)
+        public void AddData(int blockIdx, int tmp, int scheibenNum, int bp, int bt, int tc, int ta, float timex)
         {
-            playerTrackEntries.Add(new PlayerTrackEntry(blockIdx, seqNum,  itemNum, bp, bt, tc, ta, timex));
+            playerTrackEntries.Add(new PlayerTrackEntry(blockIdx, scheibenNum,  bp, bt, tc, ta, timex));
         }
 
         public void SaveDataAsCSV()
@@ -125,7 +125,6 @@ public class GameSession : MonoBehaviour
             print("filename = " + filename);
             using (StreamWriter sw = new StreamWriter(filename))
             {
-
                 // heading line for csv File 
                 string line = "BlockNumber" + fieldSeperator + "SeqNumber" + fieldSeperator + "ItemNumber" + fieldSeperator + "buttonPressed" + fieldSeperator + "buttonTarget" + fieldSeperator + "CircleTarget" + fieldSeperator + "timeAvailable" + fieldSeperator + "timeToButtonPressed";
                 sw.WriteLine(line);
@@ -134,7 +133,6 @@ public class GameSession : MonoBehaviour
                     line = playerTrackEntries[i].getEntryString();
                     sw.WriteLine(line);
                 }
-
             }
         }
 
@@ -146,8 +144,43 @@ public class GameSession : MonoBehaviour
         }
     }
 
-  
 
+    public class PlayerTrackEntry
+    {
+        private int blockIdx;
+        private int itemNumber; 
+            
+        private int mouseButtonPressed;
+        private int mousePositionX;
+        private int mousePositionY;
+        private int targetPositionX;
+        private int targetPositionY;
+        private int targetRadius;
+        private int timeAvailable;
+        private int timeToButtonPress;
+        private int buttonTarget;
+        private int targetCircle;
+        public char fieldSeperator = ';'; // It defines field seperate chracter
+
+        public PlayerTrackEntry(int bidx, int itemNum, int mbp, int bt, int tc, int ta, float timex)
+        {
+            blockIdx = bidx;
+            itemNumber = itemNum;
+            mouseButtonPressed=mbp;
+            buttonTarget=bt;
+            targetCircle = tc;
+            timeAvailable=ta;
+            timeToButtonPress=timex;
+        }
+
+        public string getEntryString()
+        {
+            string line = blockIdx.ToString() + fieldSeperator  + itemNumber.ToString() + fieldSeperator +  mouseButtonPressed.ToString() + fieldSeperator + buttonTarget.ToString() +fieldSeperator + targetCircle.ToString() + fieldSeperator + timeAvailable.ToString() + fieldSeperator + timeToButtonPress.ToString();
+            return line;
+        }
+    }
+
+    
     [System.Serializable]
     public class Paradigma
     {
@@ -166,34 +199,5 @@ public class GameSession : MonoBehaviour
         //      return JsonUtility.FromJson<Paradigma>(jsonString);
         // }
 
-    }
-
-    public class PlayerTrackEntry
-    {
-        private int blockIdx;
-        private int itemNumber;     
-        private int buttonPressed;
-        private int buttonTarget;
-        private int targetCircle;
-        private int timeAvailable;
-        private int timeToButtonPress;
-        public char fieldSeperator = ';'; // It defines field seperate chracter
-
-        public PlayerTrackEntry(int bidx, int seqNum, int itemNum, int bp, int bt, int tc, int ta, int timex)
-        {
-            blockIdx = bidx;
-            itemNumber = itemNum;
-            buttonPressed=bp;
-            buttonTarget=bt;
-            targetCircle = tc;
-            timeAvailable=ta;
-            timeToButtonPress=timex;
-        }
-
-        public string getEntryString()
-        {
-            string line = blockIdx.ToString() + fieldSeperator  + itemNumber.ToString() + fieldSeperator +  buttonPressed.ToString() + fieldSeperator + buttonTarget.ToString() +fieldSeperator + targetCircle.ToString() + fieldSeperator + timeAvailable.ToString() + fieldSeperator + timeToButtonPress.ToString();
-            return line;
-        }
     }
 }

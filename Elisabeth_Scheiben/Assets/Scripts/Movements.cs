@@ -88,6 +88,7 @@ public class Movements : MonoBehaviour
                 StartCoroutine(CreateScheibe());
                 yield return new WaitForSeconds(timedelay);
             }
+            gameSession.playerData.AddData(1,2,3,4,5,6,7,1.56f);
             if (block_idx < gameSession.playerData.paradigma.numBlocks - 1)
             {
                 yield return new WaitForSeconds(4);
@@ -109,6 +110,8 @@ public class Movements : MonoBehaviour
             }
         }
         print("startPresentation Coroutine am Ende");
+        print("saving Data");
+        gameSession.playerData.SaveDataAsCSV();
     }
 
 
