@@ -9,12 +9,12 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        print("Awake MainMenux");
+//        print("Awake MainMenux");
         //this.gameObject
         GameObject tut = GameObject.Find("OptionsMenu");
-        print("name = " + tut.name);
+//        print("name = " + tut.name);
         gameSession = FindObjectOfType<GameSession>();
-
+        print("name = " + gameSession.name);
         if (gameSession.isInitialized == false)
         {
             this.gameObject.SetActive(false);
@@ -33,7 +33,7 @@ public class MainMenu : MonoBehaviour
 
         gameSession = FindObjectOfType<GameSession>();
         gameSession.isTutorial = false;
-
+        //gameSession.configureExperimentalDesign();
         //SceneManager.LoadScene("SRTTScene");
         // alternative
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
