@@ -48,6 +48,20 @@ public class Events : MonoBehaviour {
     // Use this for initialization
     private List<int> resultButtonPressed = new List<int>();
     private int timeBetweenItemShownAndButton;
+        private int blockIdx;
+        private int timeSinceBlockStart;
+        private string eventType;
+        private int isHit;
+        private int scheibenNum;
+        private int posXmouse;
+        private int posYmouse;
+        private int posXScheibe;
+        private int posYScheibe;
+        private int velocity;
+        private int scheibenDiameter;
+        private int existenceTime;
+        private int maxExistenceTime;
+        private int numScheibenPresent;
 
 
     void Awake () {
@@ -204,7 +218,7 @@ public class Events : MonoBehaviour {
             // an dieser Stelle haben ist die presentation eines Items abgeschlossen und wir haben alle
             // Informationen um dieses Item und die Reaktion darauf zu speichern
             
-            gameSession.playerData.AddData(blockIndex, seqIndex, itemIndex, buttonPressed, targetColor, targetCircle, targetTime, timeBetweenItemShownAndButton);
+            gameSession.playerData.AddData( blockIdx,  timeSinceBlockStart, eventType,  isHit,  scheibenNum,  posXmouse, posYmouse, posXScheibe, posYScheibe, velocity, scheibenDiameter, existenceTime, maxExistenceTime, numScheibenPresent);
             itemBlockIndex++;
         }
        

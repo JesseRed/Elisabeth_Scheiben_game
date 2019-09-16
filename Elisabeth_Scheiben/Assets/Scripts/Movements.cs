@@ -38,6 +38,22 @@ public class Movements : MonoBehaviour
     //MaximumScheibenExistenceDuration;
     //Adaptive
     // Start is called before the first frame update
+        private int blockIdx;
+        private int timeSinceBlockStart;
+        private string eventType;
+        private int isHit;
+        private int scheibenNum;
+        private int posXmouse;
+        private int posYmouse;
+        private int posXScheibe;
+        private int posYScheibe;
+        private int velocity;
+        private int scheibenDiameter;
+        private int existenceTime;
+        private int maxExistenceTime;
+        private int numScheibenPresent;
+
+
     void Start()
     {
         WPos00 = cam.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
@@ -93,7 +109,7 @@ public class Movements : MonoBehaviour
             }
             t = Time.time;
             print(t);
-            gameSession.playerData.AddData(1,2,3,4,5,6,7,t);
+            gameSession.playerData.AddData(1,2,"string",4,5,6,7,8,9,10,11,12,13,14);
             if (block_idx < gameSession.playerData.paradigma.numBlocks - 1)
             {
                 yield return new WaitForSeconds(4);

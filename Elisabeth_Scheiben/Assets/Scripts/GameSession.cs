@@ -9,7 +9,7 @@ public class GameSession : MonoBehaviour
     public PlayerData playerData;
     public bool isTutorial = false;
     public bool isInitialized = false;
-    
+
 
     public string relativeSavePath = "Data";
     public string relativeReadPath = "ExperimentalDesign";
@@ -49,7 +49,7 @@ public class GameSession : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void InitializePlayerDataStructure()
@@ -68,12 +68,12 @@ public class GameSession : MonoBehaviour
         int vpNummer;
         int.TryParse(vpNummerstring, out vpNummer);
         string appdatapath = Application.dataPath;
-        string relative_path_file = Path.Combine(relativeReadPath,fileDesignName);
+        string relative_path_file = Path.Combine(relativeReadPath, fileDesignName);
         //string jsonString = Path.Combine(appdatapath, relative_path_file);
         char x = Path.DirectorySeparatorChar;
         string jsonFileName = Application.dataPath + x + relativeReadPath + x + fileDesignName; //Path.DirectorySeparatorChar Combine(appdatapath, relative_path_file);
-//        string jsonString = "G:\\Unity\\Elisabeth_Scheiben_game\\Elisabeth_Scheiben\\Assets\\ExperimentalDesign\\Paradigm1.json";
-        //string jsonString = "G:/Unity/Elisabeth_Scheiben_game/Elisabeth_Scheiben/Assets/ExperimentalDesign/Paradigm2.json";
+                                                                                                //        string jsonString = "G:\\Unity\\Elisabeth_Scheiben_game\\Elisabeth_Scheiben\\Assets\\ExperimentalDesign\\Paradigm1.json";
+                                                                                                //string jsonString = "G:/Unity/Elisabeth_Scheiben_game/Elisabeth_Scheiben/Assets/ExperimentalDesign/Paradigm2.json";
         string jsonString = File.ReadAllText(jsonFileName);
 
         playerData = new PlayerData(vorname, nachname, gebDat, trainingsDay, vpNummer, jsonString);
@@ -91,8 +91,8 @@ public class GameSession : MonoBehaviour
         public int trainingsDay;
         public int vpNummer;
         public Paradigma paradigma;
-        
-        private List<PlayerTrackEntry> playerTrackEntries ;
+
+        private List<PlayerTrackEntry> playerTrackEntries;
         public char lineSeperater = '\n'; // It defines line seperate character
         public char fieldSeperator = ';'; // It defines field seperate chracter
         public string relativeFilePath = "Assets/Data/";
@@ -113,9 +113,9 @@ public class GameSession : MonoBehaviour
             playerTrackEntries = new List<PlayerTrackEntry>();
         }
 
-        public void AddData(int blockIdx, int tmp, int scheibenNum, int bp, int bt, int tc, int ta, float timex)
+        public void AddData(int iblockIdx, int itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, int iposXmouse, int iposYmouse, int iposXScheibe, int iposYScheibe, int ivelocity, int ischeibenDiameter, int iexistenceTime, int imaxExistenceTime, int inumScheibenPresent)
         {
-            playerTrackEntries.Add(new PlayerTrackEntry(blockIdx, scheibenNum,  bp, bt, tc, ta, timex));
+            playerTrackEntries.Add(new PlayerTrackEntry( iblockIdx,  itimeSinceBlockStart, ieventType,  iisHit,  ischeibenNum,  iposXmouse,  iposYmouse,  iposXScheibe,  iposYScheibe,  ivelocity,  ischeibenDiameter,  iexistenceTime,  imaxExistenceTime,  inumScheibenPresent));
         }
 
         public void SaveDataAsCSV()
@@ -126,9 +126,14 @@ public class GameSession : MonoBehaviour
             using (StreamWriter sw = new StreamWriter(filename))
             {
                 // heading line for csv File 
-                string line = "BlockNumber" + fieldSeperator + "SeqNumber" + fieldSeperator + "ItemNumber" + fieldSeperator + "buttonPressed" + fieldSeperator + "buttonTarget" + fieldSeperator + "CircleTarget" + fieldSeperator + "timeAvailable" + fieldSeperator + "timeToButtonPressed";
+ 
+  
+                string line = "BlockNumber" + fieldSeperator + "Time Since Block start in ms" + fieldSeperator + "EventType" + fieldSeperator + "isHit" + fieldSeperator + 
+                "Scheiben Nummer (in Sequence)" + fieldSeperator + "MousePosX" + fieldSeperator + "MousePosY" + fieldSeperator + "Scheiben Pos X" + fieldSeperator + "Scheiben Pos Y" +
+                "Scheiben Velocity" + fieldSeperator + "Scheiben Durchmesser" + fieldSeperator + "Zeit of Existence" + 
+                fieldSeperator + "Maximale Existenzzeit" + fieldSeperator + "Anzahl an Scheiben aktuell present";
                 sw.WriteLine(line);
-                for (int i=0; i<playerTrackEntries.Count; i++)
+                for (int i = 0; i < playerTrackEntries.Count; i++)
                 {
                     line = playerTrackEntries[i].getEntryString();
                     sw.WriteLine(line);
@@ -137,7 +142,7 @@ public class GameSession : MonoBehaviour
         }
 
         public void PrintPlayerData()
-        {   
+        {
             print("Ausgabe von Playerdata");
             print("Name = " + vorname + ' ' + nachname);
             print(paradigma.numBlocks);
@@ -145,48 +150,65 @@ public class GameSession : MonoBehaviour
     }
 
 
+
     public class PlayerTrackEntry
     {
+
+        // blockIdx  |   Time since Block start  |   Type           |  Hit          |   ScheibenNr (in Sequence)  |    position x  |  pos y     |    velocity   |       Radius   | existence time | max_existence time |  num scheiben present
+        //    1                 1234 (ms)            Mouse_button       1/0         |       1 bei miss naechste scheibe
+        //    1                 3323                Instantiate        0           |       2
+        //    1                 3233 (ms)            Destroy            0           |       3    
         private int blockIdx;
-        private int itemNumber; 
-            
-        private int mouseButtonPressed;
-        private int mousePositionX;
-        private int mousePositionY;
-        private int targetPositionX;
-        private int targetPositionY;
-        private int targetRadius;
-        private int timeAvailable;
-        private int timeToButtonPress;
-        private int buttonTarget;
-        private float timeToMouseButtonPress;
-        private int targetCircle;
+        private int timeSinceBlockStart;
+        private string eventType;
+        private int isHit;
+        private int scheibenNum;
+        private int posXmouse;
+        private int posYmouse;
+        private int posXScheibe;
+        private int posYScheibe;
+        private int velocity;
+        private int scheibenDiameter;
+        private int existenceTime;
+        private int maxExistenceTime;
+        private int numScheibenPresent;
         public char fieldSeperator = ';'; // It defines field seperate chracter
 
-        public PlayerTrackEntry(int bidx, int itemNum, int mbp, int bt, int tc, int ta, float timex)
+        public PlayerTrackEntry(int iblockIdx, int itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, int iposXmouse, int iposYmouse, int iposXScheibe, int iposYScheibe, int ivelocity, int ischeibenDiameter, int iexistenceTime, int imaxExistenceTime, int inumScheibenPresent)
         {
-            blockIdx = bidx;
-            itemNumber = itemNum;
-            mouseButtonPressed=mbp;
-            buttonTarget=bt;
-            targetCircle = tc;
-            timeAvailable=ta;
-            timeToMouseButtonPress=timex;
+            blockIdx = iblockIdx;
+            timeSinceBlockStart = itimeSinceBlockStart;
+            eventType = ieventType;
+            isHit = iisHit;
+            scheibenNum = ischeibenNum;
+            posXmouse = iposXmouse;
+            posYmouse = iposYmouse;
+            posXScheibe = iposXScheibe;
+            posYScheibe = iposYScheibe;
+            velocity = ivelocity;
+            scheibenDiameter = ischeibenDiameter;
+            existenceTime = iexistenceTime;
+            maxExistenceTime = imaxExistenceTime;
+            numScheibenPresent = inumScheibenPresent;
         }
 
         public string getEntryString()
         {
-            string line = blockIdx.ToString() + fieldSeperator  + itemNumber.ToString() + fieldSeperator +  mouseButtonPressed.ToString() + fieldSeperator + buttonTarget.ToString() +fieldSeperator + targetCircle.ToString() + fieldSeperator + timeAvailable.ToString() + fieldSeperator + timeToMouseButtonPress.ToString();
+            string line = blockIdx.ToString() + fieldSeperator + timeSinceBlockStart.ToString() +
+            fieldSeperator + eventType + fieldSeperator + isHit + fieldSeperator + scheibenNum.ToString() + 
+            fieldSeperator + posXmouse.ToString() + fieldSeperator + posYmouse.ToString() + fieldSeperator + posXScheibe.ToString() + fieldSeperator + posYScheibe.ToString() +
+            fieldSeperator + velocity.ToString() + fieldSeperator + scheibenDiameter.ToString() + fieldSeperator + existenceTime.ToString() + 
+            fieldSeperator + maxExistenceTime.ToString() + fieldSeperator + numScheibenPresent.ToString() ;
             return line;
         }
     }
 
-    
+
     [System.Serializable]
     public class Paradigma
     {
         public int numBlocks;
-        public int numScheiben; 
+        public int numScheiben;
         public int MinimumInterScheibenDelay;
         public int MaximumInterScheibenDelay;
         public int MinimumVelocity;
