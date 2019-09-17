@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-public class Spawner : MonoBehaviour
+public class ItemSpawner : MonoBehaviour
 {
     [SerializeField] GameObject ScheibePrefab;
     [SerializeField] GameObject Dotgray;
@@ -96,6 +96,7 @@ public class Spawner : MonoBehaviour
         yield return new WaitForSeconds(1);
         waitpanel.SetActive(false);
         timeExperimetStart = Time.time;
+        print(gameSession.playerData.paradigma.numScheiben);
         for (blockIdx = 0; blockIdx < gameSession.playerData.paradigma.numBlocks; blockIdx++)
         {
             timeBlockStart = Time.time;
@@ -103,7 +104,8 @@ public class Spawner : MonoBehaviour
             hitsNumInBlock = gameSession.playerData.paradigma.numScheiben;
             for (scheibeIdxInBlock = 0; scheibeIdxInBlock < gameSession.playerData.paradigma.numScheiben; scheibeIdxInBlock++)
             {
-                // print("Sequence_index = " + i);
+                
+                // print("Sequence_index = " + scheibeIdxInBlock);
                 float timedelay = Random.Range(gameSession.playerData.paradigma.MinimumInterScheibenDelay, gameSession.playerData.paradigma.MaximumInterScheibenDelay) / 1000;
                 //StartCoroutine(CreateScheibe());
                 StartCoroutine(CreateScheibe());
@@ -179,21 +181,21 @@ public class Spawner : MonoBehaviour
 
         // Add the new Scheibe to the Player Data
 
-        gameSession.playerData.AddData(
-            blockIdx,
-            (int)(Mathf.Round((Time.time - timeBlockStart) * 1000)),
-            "instantiate",
-            0,
-            scheibeIdxInBlock,
-            (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
-            (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y,
-            (int)rbnewScheibe.transform.position.x,
-            (int)rbnewScheibe.transform.position.y,
-            (int)(velocity * 1000),
-            0, // Scheiben Diameter
-            0, //  int existenceTime, 
-            (int)durationOfScheibe, // maxExistenceTime
-            numScheibenPresent); // Anzahl an scheiben gerad auf dem Bildschirm
+            gameSession.playerData.AddData(
+                blockIdx,
+                (float)(Time.time - timeBlockStart),
+                "instantiate",
+                (int)0, // Hit
+                scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
+                (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
+                (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
+                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
+                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
+                (float)velocity ,
+                (float)0, // Scheiben Diameter
+                (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
+                (float)durationOfScheibe, // maxExistenceTime
+                numScheibenPresent);
 
         //circleCollider.radius = 0.5f;
         // starte klein
@@ -221,18 +223,18 @@ public class Spawner : MonoBehaviour
             // speichere das destroy in den Playerdata ab
             gameSession.playerData.AddData(
                 blockIdx,
-                (int)(Mathf.Round((Time.time - timeBlockStart) * 1000)),
+                (float)(Time.time - timeBlockStart),
                 "destroy",
                 (int)0, // Hit
                 scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
-                (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x, // Mouse position
-                (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y, // Mouse position
-                (int)rbnewScheibe.transform.position.x, // Scheiben Position
-                (int)rbnewScheibe.transform.position.y, // Scheiben Position
-                (int)(velocity * 1000),
-                (int)0, // Scheiben Diameter
-                (int)(Mathf.Round((Time.time - timeLokaleScheibeInstatiate) * 1000)), //  int existenceTime, 
-                (int)durationOfScheibe, // maxExistenceTime
+                (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
+                (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
+                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
+                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
+                (float)velocity ,
+                (float)0, // Scheiben Diameter
+                (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
+                (float)durationOfScheibe, // maxExistenceTime
                 numScheibenPresent);
             hitsNumInBlock-=1; // wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
             // der Nachteil ist, dass wir die Info ueber die Treffer erst am Ende der Sequenz haben
@@ -248,6 +250,45 @@ public class Spawner : MonoBehaviour
 
     }
 
+    public int get_blockIdx(){
+        return blockIdx;
+    }
 
+    public float get_timeBlockStart(){
+        return timeBlockStart;
+    }
+
+    public int get_scheibeIdxInBlock(){
+        return scheibeIdxInBlock;
+    }
+
+    public void get_nearest_Scheiben_data(float mouseX, float mouseY, out float velocity, out int numScheibenPresent){
+        GameObject [] Scheiben;
+        GameObject nearest_Scheibe;
+        Scheiben = GameObject.FindGameObjectsWithTag("Scheibe");
+        print("anzahl = " + Scheiben.Length);
+        Rigidbody2D nearest_rbScheibe = Scheiben[1].GetComponent<Rigidbody2D>();
+        float dist;
+        velocity = 0;
+        //List<GameObject> nearest_Scheiben = new List<GameObject>();
+        int idx = 0;
+        numScheibenPresent = 0;
+        float minimum_distance = 999999999999;
+        foreach (GameObject Scheibe in Scheiben){
+            idx +=1;
+            // test distance and identify the nearest Scheibe
+            Rigidbody2D rbnewScheibe = Scheibe.GetComponent<Rigidbody2D>();
+            float sx = rbnewScheibe.transform.position.x;
+            float sy = rbnewScheibe.transform.position.y;
+            numScheibenPresent +=1;
+            dist = Mathf.Sqrt(Mathf.Pow(sx-mouseX,2) + Mathf.Pow(sy-mouseY,2));
+            if (dist<minimum_distance){
+                minimum_distance=dist;
+                nearest_Scheibe = Scheibe;
+                nearest_rbScheibe = rbnewScheibe;
+            }
+        }
+        velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.x,2));
+    }
 
 }

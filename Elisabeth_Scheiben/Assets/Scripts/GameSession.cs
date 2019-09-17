@@ -9,8 +9,6 @@ public class GameSession : MonoBehaviour
     public PlayerData playerData;
     public bool isTutorial = false;
     public bool isInitialized = false;
-
-
     public string relativeSavePath = "Data";
     public string relativeReadPath = "ExperimentalDesign";
     public string fileDesignName = "Experiment1_Day1.csv";
@@ -113,7 +111,7 @@ public class GameSession : MonoBehaviour
             playerTrackEntries = new List<PlayerTrackEntry>();
         }
 
-        public void AddData(int iblockIdx, int itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, int iposXmouse, int iposYmouse, int iposXScheibe, int iposYScheibe, int ivelocity, int ischeibenDiameter, int iexistenceTime, int imaxExistenceTime, int inumScheibenPresent)
+        public void AddData(int iblockIdx, float itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, float iposXmouse, float iposYmouse, float iposXScheibe, float iposYScheibe, float ivelocity, float ischeibenDiameter, float iexistenceTime, float imaxExistenceTime, int inumScheibenPresent)
         {
             playerTrackEntries.Add(new PlayerTrackEntry( iblockIdx,  itimeSinceBlockStart, ieventType,  iisHit,  ischeibenNum,  iposXmouse,  iposYmouse,  iposXScheibe,  iposYScheibe,  ivelocity,  ischeibenDiameter,  iexistenceTime,  imaxExistenceTime,  inumScheibenPresent));
         }
@@ -155,26 +153,26 @@ public class GameSession : MonoBehaviour
     {
 
         // blockIdx  |   Time since Block start  |   Type           |  Hit          |   ScheibenNr (in Sequence)  |    position x  |  pos y     |    velocity   |       Radius   | existence time | max_existence time |  num scheiben present
-        //    1                 1234 (ms)            Mouse_button       1/0         |       1 bei miss naechste scheibe
-        //    1                 3323                Instantiate        0           |       2
-        //    1                 3233 (ms)            Destroy            0           |       3    
+        //    1                 1234 (ms)            mouseButton       1/0         |       1 bei miss naechste scheibe
+        //    1                 3323                instantiate        0           |       2
+        //    1                 3233 (ms)            destroy            0           |       3    
         private int blockIdx;
-        private int timeSinceBlockStart;
+        private float timeSinceBlockStart;
         private string eventType;
         private int isHit;
         private int scheibenNum;
-        private int posXmouse;
-        private int posYmouse;
-        private int posXScheibe;
-        private int posYScheibe;
-        private int velocity;
-        private int scheibenDiameter;
-        private int existenceTime;
-        private int maxExistenceTime;
+        private float posXmouse;
+        private float posYmouse;
+        private float posXScheibe;
+        private float posYScheibe;
+        private float velocity;
+        private float scheibenDiameter;
+        private float existenceTime;
+        private float maxExistenceTime;
         private int numScheibenPresent;
         public char fieldSeperator = ';'; // It defines field seperate chracter
 
-        public PlayerTrackEntry(int iblockIdx, int itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, int iposXmouse, int iposYmouse, int iposXScheibe, int iposYScheibe, int ivelocity, int ischeibenDiameter, int iexistenceTime, int imaxExistenceTime, int inumScheibenPresent)
+        public PlayerTrackEntry(int iblockIdx, float itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, float iposXmouse, float iposYmouse, float iposXScheibe, float iposYScheibe, float ivelocity, float ischeibenDiameter, float iexistenceTime, float imaxExistenceTime, int inumScheibenPresent)
         {
             blockIdx = iblockIdx;
             timeSinceBlockStart = itimeSinceBlockStart;

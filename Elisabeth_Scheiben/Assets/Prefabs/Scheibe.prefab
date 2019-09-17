@@ -60,6 +60,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -114,7 +115,7 @@ MonoBehaviour:
   Dot: {fileID: 3412595361006812700, guid: 6404a17e5119db241bdeba7f5a20f3bf, type: 3}
   Dotgray: {fileID: 4134930324706354877, guid: ade76279c44b91140b8e869c49a655c0, type: 3}
   camx: {fileID: 0}
-  freezeScheibe: 0
+  particle: {fileID: 0}
 --- !u!50 &5152610180539549014
 Rigidbody2D:
   serializedVersion: 4
