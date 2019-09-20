@@ -56,13 +56,13 @@ public class Observer : MonoBehaviour
             }
             float vel;
             int numScheibenPresent;
-            nearest_Scheibe = itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToViewportPoint(Input.mousePosition), out vel, out numScheibenPresent);
+            nearest_Scheibe = itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToWorldPoint(Input.mousePosition), out vel, out numScheibenPresent);
             nearest_rbScheibe = nearest_Scheibe.GetComponent<Rigidbody2D>();
             float velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)); //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
-            print("velocity = "  + velocity);
-            print("number of Scheiben present = " + numScheibenPresent);
+            //print("velocity = "  + velocity);
+            //print("number of Scheiben present = " + numScheibenPresent);
             Status status = nearest_Scheibe.GetComponent<Status>();
-            print("instantiate time  = " + status.durationOfScheibe);
+            //print("instantiate time  = " + status.durationOfScheibe);
             gameSession.playerData.AddData(
                     itemSpawner.get_blockIdx(),
                     (float)(Time.time - itemSpawner.get_timeBlockStart()),
@@ -71,8 +71,8 @@ public class Observer : MonoBehaviour
                     itemSpawner.get_scheibeIdxInBlock(), // Number der Scheibe im aktuellen Block
                     Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
                     Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
-                    Camera.main.ScreenToViewportPoint(nearest_rbScheibe.transform.position).x, // Mouse position
-                    Camera.main.ScreenToViewportPoint(nearest_rbScheibe.transform.position).y, // Mouse position
+                    Camera.main.WorldToViewportPoint(nearest_rbScheibe.transform.position).x, // Mouse position
+                    Camera.main.WorldToViewportPoint(nearest_rbScheibe.transform.position).y, // Mouse position
                      velocity, // = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)), //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
                     (float)(status.scale), // Scheiben Diameter
                     (float)(Time.time - status.timeLokaleScheibeInstatiate), //timeLokaleScheibeInstatiate), //  int existenceTime, 

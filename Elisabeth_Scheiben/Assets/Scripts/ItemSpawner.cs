@@ -56,13 +56,16 @@ public class ItemSpawner : MonoBehaviour
     private float timeExperimetStart;
     private float timeBlockStart;
     private int scheibeIdxInBlock;
-    private int hitsNumInBlock;
+
 
     void Start()
     {
-        WPos00 = cam.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
-        WPos11 = cam.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
-        print("Spawner / Movements awake");
+        // cam = GetComponent<Camera>();
+        // WPos00 = cam.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
+        // WPos11 = cam.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
+        // print(WPos00.x);
+        //print("Spawner / Movements awake");
+        
         // hole mir als erstes die Sequencedaten die im csv File im Files verzeichis
         // gespeichert sind und an das CSVParsing object mit dem Script CSVParsing gekoppelt sind
         //SeqNonRandom = CSVParsing.GetComponent<CSVParsing>().readDataNonRandom2();
@@ -79,9 +82,9 @@ public class ItemSpawner : MonoBehaviour
         summaryTMP = GameObject.Find("summarytext (TMP)");
         summarytext = summaryTMP.GetComponent<TextMeshProUGUI>();
         waitpanel = GameObject.Find("WaitPanel");
-        print("in Movements numBlocks = " + gameSession.playerData.paradigma.numBlocks);
+        //print("in Movements numBlocks = " + gameSession.playerData.paradigma.numBlocks);
         StartCoroutine(startPresentation());
-        print("in Start after StartCoroutine");
+        //print("in Start after StartCoroutine");
     }
 
     IEnumerator startPresentation()
@@ -97,27 +100,28 @@ public class ItemSpawner : MonoBehaviour
         yield return new WaitForSeconds(1);
         waitpanel.SetActive(false);
         timeExperimetStart = Time.time;
-        print(gameSession.playerData.paradigma.numScheiben);
+        //print(gameSession.playerData.paradigma.numScheiben);
         for (blockIdx = 0; blockIdx < gameSession.playerData.paradigma.numBlocks; blockIdx++)
         {
             timeBlockStart = Time.time;
             // print("block index = " + block_idx);
-            hitsNumInBlock = gameSession.playerData.paradigma.numScheiben;
+
+            gameSession.hitsNumInBlock = 0;
             for (scheibeIdxInBlock = 0; scheibeIdxInBlock < gameSession.playerData.paradigma.numScheiben; scheibeIdxInBlock++)
             {
                 
                 // print("Sequence_index = " + scheibeIdxInBlock);
-                float timedelay = Random.Range(gameSession.playerData.paradigma.MinimumInterScheibenDelay, gameSession.playerData.paradigma.MaximumInterScheibenDelay) / 1000;
+                float timedelay = Random.Range(gameSession.playerData.paradigma.MinimumInterScheibenDelay, gameSession.playerData.paradigma.MaximumInterScheibenDelay);
                 //StartCoroutine(CreateScheibe());
                 StartCoroutine(CreateScheibe());
                 yield return new WaitForSeconds(timedelay);
 
             }
 
-            gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+            //gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
             if (blockIdx < gameSession.playerData.paradigma.numBlocks - 1)
             {
-                string summary = "Getroffene Scheiben: " + hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
+                string summary = "Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
                 summarytext.SetText(summary);
                 yield return new WaitForSeconds(4);
                 waitpanel.SetActive(true);
@@ -139,9 +143,11 @@ public class ItemSpawner : MonoBehaviour
                 countdowntext.SetText("Task finished");
             }
         }
-        print("startPresentation Coroutine am Ende");
+        //print("startPresentation Coroutine am Ende");
         print("saving Data");
         gameSession.playerData.SaveDataAsCSV();
+        yield return new WaitForSeconds(1);
+        Application.Quit();
     }
 
 
@@ -154,9 +160,9 @@ public class ItemSpawner : MonoBehaviour
 
     IEnumerator CreateScheibe()
     {
-        float viewportPosx = Random.Range(0.02f, 0.98f);
-        float viewportPosy = Random.Range(0.02f, 0.98f);
-        float velocity = Random.Range(gameSession.playerData.paradigma.MinimumVelocity, gameSession.playerData.paradigma.MaximumVelocity) / 10.0f;
+        float viewportPosx = Random.Range(0.05f, 0.95f);
+        float viewportPosy = Random.Range(0.05f, 0.95f);
+        float velocity = Random.Range(gameSession.playerData.paradigma.MinimumVelocity, gameSession.playerData.paradigma.MaximumVelocity);
         // aufteilung der Geschwindigkeit auf die X und die Y Richtung 
         float div = Random.Range(0.0f, 1f);
         float velInX = div * velocity;
@@ -173,7 +179,7 @@ public class ItemSpawner : MonoBehaviour
         Status status = newScheibe.GetComponent<Status>();
 
         float timeLokaleScheibeInstatiate = Time.time;
-        float durationOfScheibe = Random.Range(gameSession.playerData.paradigma.MinimumScheibenExistenceDuration, gameSession.playerData.paradigma.MaximumScheibenExistenceDuration) / 1000;
+        float durationOfScheibe = Random.Range(gameSession.playerData.paradigma.MinimumScheibenExistenceDuration, gameSession.playerData.paradigma.MaximumScheibenExistenceDuration);
         
         status.durationOfScheibe = durationOfScheibe;
         status.timeLokaleScheibeInstatiate = timeLokaleScheibeInstatiate;
@@ -197,8 +203,8 @@ public class ItemSpawner : MonoBehaviour
                 scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
                 (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
                 (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
-                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
-                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
+                (float)Camera.main.WorldToViewportPoint(newScheibe.transform.position).x, // Scheiben Position
+                (float)Camera.main.WorldToViewportPoint(newScheibe.transform.position).y, // Scheiben Position
                 (float)velocity ,
                 (float)0, // Scheiben Diameter
                 (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
@@ -210,21 +216,29 @@ public class ItemSpawner : MonoBehaviour
         transf.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         // wir teilen die duration durch 100 und machen die Scheibe dann in 100
         // Schritten gross und klein
-        int index = 0;
-        for (float f = 0; f < durationOfScheibe; f = f + durationOfScheibe / 200)
+        
+
+        float scaled = 0;
+        while (Time.time-timeLokaleScheibeInstatiate < durationOfScheibe)
+//        for (float f = 0; f < durationOfScheibe; f = f + durationOfScheibe / 200)
         {
+
             //print("f= " +f.ToString());
             if (newScheibe != null && !newScheibe.GetComponent<Collisions>().GetFreeze())
             {
-                //print("index " + index.ToString());
-                if (f < durationOfScheibe / 2) { index++; } else { index--; }
+                
+                scaled = Mathf.Abs( (Time.time-timeLokaleScheibeInstatiate) - (durationOfScheibe/2) )/(durationOfScheibe/2);
+                scaled = ((scaled * -0.9f) + 1.0f);
+                // //print("index " + index.ToString());
+                // if (Time.time-timeLokaleScheibeInstatiate < durationOfScheibe / 2) { index++; } else { index--; }
 
-                float scaled = 0.1f + ((0.9f / 100f) * (float)index);
+                // float scaled = 0.1f + ((0.9f / 100f) * (float)index);
                 transf.localScale = new Vector3(scaled, scaled, 0.1f);
                 status.scale = scaled;
-                yield return null; //new WaitForSeconds(durationOfScheibe / 200);
+                 //new WaitForSeconds(durationOfScheibe / 200);
             }
             // yield return null;
+            yield return null;
         }
         if (newScheibe != null && !newScheibe.GetComponent<Collisions>().GetFreeze())
         {
@@ -238,14 +252,14 @@ public class ItemSpawner : MonoBehaviour
                 scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
                 (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
                 (float)Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
-                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
-                (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
+                (float)Camera.main.WorldToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
+                (float)Camera.main.WorldToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
                 (float)velocity ,
                 (float)0f, // Scheiben Diameter
                 (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
                 (float)durationOfScheibe, // maxExistenceTime
                 numScheibenPresent);
-            hitsNumInBlock-=1; // wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
+            gameSession.hitsNumInBlock+=1; // wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
             // der Nachteil ist, dass wir die Info ueber die Treffer erst am Ende der Sequenz haben
             Destroy(newScheibe);
         }
@@ -281,7 +295,7 @@ public class ItemSpawner : MonoBehaviour
         float distance = Mathf.Infinity;
         foreach (GameObject Scheibe in Scheiben)
         {
-            Vector3 diff = Scheibe.transform.position - mpos;
+            Vector3 diff = Scheibe.transform.position - mpos; // mpos ist in Worldpos
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance)
             {

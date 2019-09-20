@@ -59,6 +59,7 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
+        print("Start");
         WPos00 = cam.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
         WPos11 = cam.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
         print("Spawner / Movements awake");
@@ -78,9 +79,9 @@ public class Spawner : MonoBehaviour
         summaryTMP = GameObject.Find("summarytext (TMP)");
         summarytext = summaryTMP.GetComponent<TextMeshProUGUI>();
         waitpanel = GameObject.Find("WaitPanel");
-        print("in Movements numBlocks = " + gameSession.playerData.paradigma.numBlocks);
+        //print("in Movements numBlocks = " + gameSession.playerData.paradigma.numBlocks);
         StartCoroutine(startPresentation());
-        print("in Start after StartCoroutine");
+        //print("in Start after StartCoroutine");
     }
 
     IEnumerator startPresentation()
@@ -111,7 +112,7 @@ public class Spawner : MonoBehaviour
 
             }
 
-            gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+            //gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
             if (blockIdx < gameSession.playerData.paradigma.numBlocks - 1)
             {
                 string summary = "Getroffene Scheiben: " + hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
@@ -135,7 +136,7 @@ public class Spawner : MonoBehaviour
                 countdowntext.SetText("Task finished");
             }
         }
-        print("startPresentation Coroutine am Ende");
+        //print("startPresentation Coroutine am Ende");
         print("saving Data");
         gameSession.playerData.SaveDataAsCSV();
     }
@@ -180,21 +181,21 @@ public class Spawner : MonoBehaviour
         // Add the new Scheibe to the Player Data
 
         gameSession.playerData.AddData(
-            blockIdx,
-            (int)(Mathf.Round((Time.time - timeBlockStart) * 1000)),
-            "instantiate",
-            0,
-            scheibeIdxInBlock,
-            (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
-            (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y,
-            (int)rbnewScheibe.transform.position.x,
-            (int)rbnewScheibe.transform.position.y,
-            (int)(velocity * 1000),
-            0, // Scheiben Diameter
-            0, //  int existenceTime, 
-            (int)durationOfScheibe, // maxExistenceTime
-            numScheibenPresent); // Anzahl an scheiben gerad auf dem Bildschirm
-
+                blockIdx,
+                (float)(Time.time - timeBlockStart),
+                "instantiate",
+                (int)0, // Hit
+                scheibeIdxInBlock,
+                Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
+                Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
+                Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Mouse position
+                Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Mouse position
+                (float)velocity, // = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)), //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
+                (float)0f, // Scheiben Diameter
+                (float)0f, //timeLokaleScheibeInstatiate), //  int existenceTime, 
+                (float)(durationOfScheibe),//durationOfScheibe, // maxExistenceTime
+                numScheibenPresent
+        );
         //circleCollider.radius = 0.5f;
         // starte klein
         transf.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -221,21 +222,21 @@ public class Spawner : MonoBehaviour
             // speichere das destroy in den Playerdata ab
             gameSession.playerData.AddData(
                 blockIdx,
-                (int)(Mathf.Round((Time.time - timeBlockStart) * 1000)),
+                (float)(Time.time - timeBlockStart),
                 "destroy",
                 (int)0, // Hit
-                scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
-                (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x, // Mouse position
-                (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y, // Mouse position
-                (int)rbnewScheibe.transform.position.x, // Scheiben Position
-                (int)rbnewScheibe.transform.position.y, // Scheiben Position
-                (int)(velocity * 1000),
-                (int)0, // Scheiben Diameter
-                (int)(Mathf.Round((Time.time - timeLokaleScheibeInstatiate) * 1000)), //  int existenceTime, 
-                (int)durationOfScheibe, // maxExistenceTime
-                numScheibenPresent);
-            hitsNumInBlock-=1; // wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
-            // der Nachteil ist, dass wir die Info ueber die Treffer erst am Ende der Sequenz haben
+                scheibeIdxInBlock,
+                Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
+                Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
+                Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Mouse position
+                Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Mouse position
+                (float)velocity, // = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)), //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
+                (float)0f, // Scheiben Diameter
+                (float)(Time.time - timeLokaleScheibeInstatiate), //timeLokaleScheibeInstatiate), //  int existenceTime, 
+                (float)(durationOfScheibe),//durationOfScheibe, // maxExistenceTime
+                numScheibenPresent
+        );
+
             Destroy(newScheibe);
         }
     }

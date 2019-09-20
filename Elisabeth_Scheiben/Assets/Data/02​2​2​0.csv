@@ -1,0 +1,8 @@
+BlockNumber;Time Since Block start in ms;EventType;isHit;Scheiben Nummer (in Sequence);MousePosX;MousePosY;Scheiben Pos X;Scheiben Pos Y;Scheiben Velocity;Scheiben Durchmesser;Zeit of Existence;Maximale Existenzzeit;Anzahl an Scheiben aktuell present
+0;0;instantiate;0;0;0,4995117;0,6035156;0,002275428;-0,0008706388;2,3;0;0;2;1
+0;1,413202;mouse;1;0;0,8764648;0,4876302;0,004855137;-0,0001091443;1,928697;0,8559999;1,413202;2;1
+0;2,001783;instantiate;0;1;0,6850586;0,4160156;-0,005292707;-0,001643845;2,4;0;0;3;2
+0;3,012772;instantiate;0;2;0,6323242;0,4602865;-0,0009288826;-0,0007704832;2,6;0;0;2;3
+1;2;string;4;5;6;7;8;9;10;11;12;13;14
+0;5,37474;destroy;0;3;0,6293945;0,4654948;-0,004833676;-0,000365753;2,4;0;3,372956;3;3
+0;6,400072;destroy;0;3;0,6293945;0,4654948;0,004472675;0,003504336;2,6;0;3,3873;2;3

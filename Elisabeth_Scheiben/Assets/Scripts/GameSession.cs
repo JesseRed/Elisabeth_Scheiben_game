@@ -13,6 +13,7 @@ public class GameSession : MonoBehaviour
     public string relativeReadPath = "ExperimentalDesign";
     public string fileDesignName = "Experiment1_Day1.csv";
     public Paradigma paradigma;
+    public int hitsNumInBlock; // zaehlt die Treffer pro Block mit
     private void Awake()
     {
         SetUpSingleton();
@@ -24,7 +25,7 @@ public class GameSession : MonoBehaviour
         int numberOfGameSessions = FindObjectsOfType<GameSession>().Length;
         if (numberOfGameSessions > 1)
         {
-            print("already initialized");
+            //print("already initialized");
             //GameObject MM = FindObject
 
 
@@ -76,7 +77,7 @@ public class GameSession : MonoBehaviour
 
         playerData = new PlayerData(vorname, nachname, gebDat, trainingsDay, vpNummer, jsonString);
         isInitialized = true;
-        playerData.PrintPlayerData();
+        //playerData.PrintPlayerData();
         //Paradigma paradigma = Paradigma(jsonString);
     }
 
@@ -113,7 +114,7 @@ public class GameSession : MonoBehaviour
 
         public void AddData(int iblockIdx, float itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, float iposXmouse, float iposYmouse, float iposXScheibe, float iposYScheibe, float ivelocity, float ischeibenDiameter, float iexistenceTime, float imaxExistenceTime, int inumScheibenPresent)
         {
-            playerTrackEntries.Add(new PlayerTrackEntry( iblockIdx,  itimeSinceBlockStart, ieventType,  iisHit,  ischeibenNum,  iposXmouse,  iposYmouse,  iposXScheibe,  iposYScheibe,  ivelocity,  ischeibenDiameter,  iexistenceTime,  imaxExistenceTime,  inumScheibenPresent));
+            playerTrackEntries.Add(new PlayerTrackEntry(iblockIdx, itimeSinceBlockStart, ieventType, iisHit, ischeibenNum, iposXmouse, iposYmouse, iposXScheibe, iposYScheibe, ivelocity, ischeibenDiameter, iexistenceTime, imaxExistenceTime, inumScheibenPresent));
         }
 
         public void SaveDataAsCSV()
@@ -124,15 +125,15 @@ public class GameSession : MonoBehaviour
             using (StreamWriter sw = new StreamWriter(filename))
             {
                 // heading line for csv File 
- 
-  
-                string line = "BlockNumber" + fieldSeperator + "Time Since Block start in ms" + fieldSeperator + "EventType" + fieldSeperator + "isHit" + fieldSeperator + 
-                "Scheiben Nummer (in Sequence)" + fieldSeperator + "MousePosX" + fieldSeperator + "MousePosY" + fieldSeperator + "Scheiben Pos X" + fieldSeperator + "Scheiben Pos Y" +fieldSeperator +
-                "Scheiben Velocity" + fieldSeperator + "Scheiben Durchmesser" + fieldSeperator + "Zeit of Existence"  + fieldSeperator + 
+
+
+                string line = "BlockNumber" + fieldSeperator + "Time Since Block start in ms" + fieldSeperator + "EventType" + fieldSeperator + "isHit" + fieldSeperator +
+                "Scheiben Nummer (in Sequence)" + fieldSeperator + "MousePosX" + fieldSeperator + "MousePosY" + fieldSeperator + "Scheiben Pos X" + fieldSeperator + "Scheiben Pos Y" + fieldSeperator +
+                "Scheiben Velocity" + fieldSeperator + "Scheiben Durchmesser" + fieldSeperator + "Zeit of Existence" + fieldSeperator +
                 "Maximale Existenzzeit" + fieldSeperator + "Anzahl an Scheiben aktuell present";
-                
- 
-                
+
+
+
                 sw.WriteLine(line);
                 for (int i = 0; i < playerTrackEntries.Count; i++)
                 {
@@ -175,7 +176,12 @@ public class GameSession : MonoBehaviour
         private int numScheibenPresent;
         public char fieldSeperator = ';'; // It defines field seperate chracter
 
-        public PlayerTrackEntry(int iblockIdx, float itimeSinceBlockStart, string ieventType, int iisHit, int ischeibenNum, float iposXmouse, float iposYmouse, float iposXScheibe, float iposYScheibe, float ivelocity, float ischeibenDiameter, float iexistenceTime, float imaxExistenceTime, int inumScheibenPresent)
+        public PlayerTrackEntry(int iblockIdx, float itimeSinceBlockStart,
+            string ieventType, int iisHit, int ischeibenNum,
+            float iposXmouse, float iposYmouse,
+            float iposXScheibe, float iposYScheibe,
+            float ivelocity, float ischeibenDiameter,
+            float iexistenceTime, float imaxExistenceTime, int inumScheibenPresent)
         {
             blockIdx = iblockIdx;
             timeSinceBlockStart = itimeSinceBlockStart;
@@ -196,10 +202,10 @@ public class GameSession : MonoBehaviour
         public string getEntryString()
         {
             string line = blockIdx.ToString() + fieldSeperator + timeSinceBlockStart.ToString() +
-            fieldSeperator + eventType + fieldSeperator + isHit.ToString() + fieldSeperator + scheibenNum.ToString() + 
+            fieldSeperator + eventType + fieldSeperator + isHit.ToString() + fieldSeperator + scheibenNum.ToString() +
             fieldSeperator + posXmouse.ToString() + fieldSeperator + posYmouse.ToString() + fieldSeperator + posXScheibe.ToString() + fieldSeperator + posYScheibe.ToString() +
-            fieldSeperator + velocity.ToString() + fieldSeperator + scheibenDiameter.ToString() + fieldSeperator + existenceTime.ToString() + 
-            fieldSeperator + maxExistenceTime.ToString() + fieldSeperator + numScheibenPresent.ToString() ;
+            fieldSeperator + velocity.ToString() + fieldSeperator + scheibenDiameter.ToString() + fieldSeperator + existenceTime.ToString() +
+            fieldSeperator + maxExistenceTime.ToString() + fieldSeperator + numScheibenPresent.ToString();
             return line;
         }
     }
@@ -210,12 +216,12 @@ public class GameSession : MonoBehaviour
     {
         public int numBlocks;
         public int numScheiben;
-        public int MinimumInterScheibenDelay;
-        public int MaximumInterScheibenDelay;
-        public int MinimumVelocity;
-        public int MaximumVelocity;
-        public int MinimumScheibenExistenceDuration;
-        public int MaximumScheibenExistenceDuration;
+        public float MinimumInterScheibenDelay;
+        public float MaximumInterScheibenDelay;
+        public float MinimumVelocity;
+        public float MaximumVelocity;
+        public float MinimumScheibenExistenceDuration;
+        public float MaximumScheibenExistenceDuration;
         public int Adaptive;
 
         // public static Paradigma CreateFromJSON(string jsonString)

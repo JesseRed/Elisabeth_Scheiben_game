@@ -14,7 +14,7 @@ public class MainMenu : MonoBehaviour
         GameObject tut = GameObject.Find("OptionsMenu");
 //        print("name = " + tut.name);
         gameSession = FindObjectOfType<GameSession>();
-        print("name = " + gameSession.name);
+//        print("name = " + gameSession.name);
         if (gameSession.isInitialized == false)
         {
             this.gameObject.SetActive(false);
