@@ -12,7 +12,8 @@ public class Observer : MonoBehaviour
     private GameSession gameSession;
     private int isHit;
     private ItemSpawner itemSpawner;
-
+    private GameObject nearest_Scheibe;
+    private Rigidbody2D nearest_rbScheibe;
     // private RaycastHit hit;
     // Start is called before the first frame update
     void Start()
@@ -55,7 +56,13 @@ public class Observer : MonoBehaviour
             }
             float vel;
             int numScheibenPresent;
-            itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToViewportPoint(Input.mousePosition).x, Camera.main.ScreenToViewportPoint(Input.mousePosition).y, out vel, out numScheibenPresent);
+            nearest_Scheibe = itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToViewportPoint(Input.mousePosition), out vel, out numScheibenPresent);
+            nearest_rbScheibe = nearest_Scheibe.GetComponent<Rigidbody2D>();
+            float velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)); //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
+            print("velocity = "  + velocity);
+            print("number of Scheiben present = " + numScheibenPresent);
+            Status status = nearest_Scheibe.GetComponent<Status>();
+            print("instantiate time  = " + status.durationOfScheibe);
             gameSession.playerData.AddData(
                     itemSpawner.get_blockIdx(),
                     (float)(Time.time - itemSpawner.get_timeBlockStart()),
@@ -64,15 +71,13 @@ public class Observer : MonoBehaviour
                     itemSpawner.get_scheibeIdxInBlock(), // Number der Scheibe im aktuellen Block
                     Camera.main.ScreenToViewportPoint(Input.mousePosition).x, // Mouse position
                     Camera.main.ScreenToViewportPoint(Input.mousePosition).y, // Mouse position
-                    1f,//Camera.main.ScreenToViewportPoint(rb.transform.position).x, // Scheiben Position
-                    1f, //Camera.main.ScreenToViewportPoint(rb.transform.position).y, // Scheiben Position
-                    1f, //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
-                    (float)0, // Scheiben Diameter
-                    (float)(Time.time - 0f), //timeLokaleScheibeInstatiate), //  int existenceTime, 
-                    (float)0f,//durationOfScheibe, // maxExistenceTime
+                    Camera.main.ScreenToViewportPoint(nearest_rbScheibe.transform.position).x, // Mouse position
+                    Camera.main.ScreenToViewportPoint(nearest_rbScheibe.transform.position).y, // Mouse position
+                     velocity, // = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)), //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
+                    (float)(status.scale), // Scheiben Diameter
+                    (float)(Time.time - status.timeLokaleScheibeInstatiate), //timeLokaleScheibeInstatiate), //  int existenceTime, 
+                    (float)(status.durationOfScheibe),//durationOfScheibe, // maxExistenceTime
                     numScheibenPresent);
-            
-
         }
         if (Input.GetMouseButtonUp(0) && mouse_pressed)
         {

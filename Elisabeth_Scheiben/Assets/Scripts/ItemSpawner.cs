@@ -28,6 +28,7 @@ public class ItemSpawner : MonoBehaviour
     public GameObject startTMP;
     public TextMeshProUGUI summarytext;
     public GameObject summaryTMP;
+ 
     //Block;
     //Scheiben;
     //MinimumInterScheibenDelay;
@@ -132,6 +133,7 @@ public class ItemSpawner : MonoBehaviour
             }
             else
             {
+                yield return new WaitForSeconds(4);
                 waitpanel.SetActive(true);
                 starttext.SetText("Congratulations ...");
                 countdowntext.SetText("Task finished");
@@ -168,8 +170,14 @@ public class ItemSpawner : MonoBehaviour
         // print("pos = " + newPos.ToString());
         GameObject newScheibe = Instantiate(ScheibePrefab);
         numScheibenPresent += 1;
+        Status status = newScheibe.GetComponent<Status>();
+
         float timeLokaleScheibeInstatiate = Time.time;
         float durationOfScheibe = Random.Range(gameSession.playerData.paradigma.MinimumScheibenExistenceDuration, gameSession.playerData.paradigma.MaximumScheibenExistenceDuration) / 1000;
+        
+        status.durationOfScheibe = durationOfScheibe;
+        status.timeLokaleScheibeInstatiate = timeLokaleScheibeInstatiate;
+        
         // print("Scheibe wurde instanziert");
         Rigidbody2D rbnewScheibe = newScheibe.GetComponent<Rigidbody2D>();
         //Instantiate(rbScheibePrefab, newPos, Quaternion.identity);
@@ -213,6 +221,7 @@ public class ItemSpawner : MonoBehaviour
 
                 float scaled = 0.1f + ((0.9f / 100f) * (float)index);
                 transf.localScale = new Vector3(scaled, scaled, 0.1f);
+                status.scale = scaled;
                 yield return null; //new WaitForSeconds(durationOfScheibe / 200);
             }
             // yield return null;
@@ -232,7 +241,7 @@ public class ItemSpawner : MonoBehaviour
                 (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).x, // Scheiben Position
                 (float)Camera.main.ScreenToViewportPoint(rbnewScheibe.transform.position).y, // Scheiben Position
                 (float)velocity ,
-                (float)0, // Scheiben Diameter
+                (float)0f, // Scheiben Diameter
                 (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
                 (float)durationOfScheibe, // maxExistenceTime
                 numScheibenPresent);
@@ -262,33 +271,61 @@ public class ItemSpawner : MonoBehaviour
         return scheibeIdxInBlock;
     }
 
-    public void get_nearest_Scheiben_data(float mouseX, float mouseY, out float velocity, out int numScheibenPresent){
-        GameObject [] Scheiben;
-        GameObject nearest_Scheibe;
+    public GameObject get_nearest_Scheiben_data(Vector3 mpos, out float velocity, out int numScheibenPresent){
+        GameObject[] Scheiben;
+        GameObject nearest_Scheibe = null;
+        Rigidbody2D nearest_rbScheibe = null;
         Scheiben = GameObject.FindGameObjectsWithTag("Scheibe");
-        print("anzahl = " + Scheiben.Length);
-        Rigidbody2D nearest_rbScheibe = Scheiben[1].GetComponent<Rigidbody2D>();
-        float dist;
-        velocity = 0;
-        //List<GameObject> nearest_Scheiben = new List<GameObject>();
-        int idx = 0;
-        numScheibenPresent = 0;
-        float minimum_distance = 999999999999;
-        foreach (GameObject Scheibe in Scheiben){
-            idx +=1;
-            // test distance and identify the nearest Scheibe
-            Rigidbody2D rbnewScheibe = Scheibe.GetComponent<Rigidbody2D>();
-            float sx = rbnewScheibe.transform.position.x;
-            float sy = rbnewScheibe.transform.position.y;
-            numScheibenPresent +=1;
-            dist = Mathf.Sqrt(Mathf.Pow(sx-mouseX,2) + Mathf.Pow(sy-mouseY,2));
-            if (dist<minimum_distance){
-                minimum_distance=dist;
+        numScheibenPresent = Scheiben.Length;
+        velocity = 0f;
+        float distance = Mathf.Infinity;
+        foreach (GameObject Scheibe in Scheiben)
+        {
+            Vector3 diff = Scheibe.transform.position - mpos;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
                 nearest_Scheibe = Scheibe;
-                nearest_rbScheibe = rbnewScheibe;
+                nearest_rbScheibe = nearest_Scheibe.GetComponent<Rigidbody2D>();
+                distance = curDistance;
             }
         }
-        velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.x,2));
-    }
 
+        if (nearest_Scheibe != null){
+            velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2));
+            // print("velocity = " + velocity);
+            // print("velocity x  = "  + nearest_rbScheibe.velocity.x);
+            // print("velocity y  = "  + nearest_rbScheibe.velocity.y);
+            // print("number of Scheiben present = " + numScheibenPresent);
+        }
+        return nearest_Scheibe;
+        // return closest;
+
+        // print("anzahl = " + Scheiben.Length);
+        // Rigidbody2D nearest_rbScheibe = Scheiben[0].GetComponent<Rigidbody2D>();
+        // float dist = Mathf.Infinity;
+        // velocity = 0;
+        // //List<GameObject> nearest_Scheiben = new List<GameObject>();
+        // int idx = 0;
+        // numScheibenPresent = 0;
+        // float minimum_distance = 999999999999;
+        // foreach (GameObject Scheibe in Scheiben){
+        //     idx +=1;
+        //     print(" found Scheibe Nummer " + idx );
+        //     // test distance and identify the nearest Scheibe
+        //     Rigidbody2D rbnewScheibe = Scheibe.GetComponent<Rigidbody2D>();
+        //     float sx = rbnewScheibe.transform.position.x;
+        //     float sy = rbnewScheibe.transform.position.y;
+        //     numScheibenPresent +=1;
+        //     dist = Mathf.Sqrt(Mathf.Pow(sx-mouseX,2) + Mathf.Pow(sy-mouseY,2));
+        //     if (dist<minimum_distance){
+        //         minimum_distance=dist;
+        //         nearest_Scheibe = Scheibe;
+        //         nearest_rbScheibe = rbnewScheibe;
+        //     }
+        // }
+        // velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2));
+    }
 }
+
+

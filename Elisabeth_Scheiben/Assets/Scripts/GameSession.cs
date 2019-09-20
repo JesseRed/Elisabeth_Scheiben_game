@@ -127,9 +127,12 @@ public class GameSession : MonoBehaviour
  
   
                 string line = "BlockNumber" + fieldSeperator + "Time Since Block start in ms" + fieldSeperator + "EventType" + fieldSeperator + "isHit" + fieldSeperator + 
-                "Scheiben Nummer (in Sequence)" + fieldSeperator + "MousePosX" + fieldSeperator + "MousePosY" + fieldSeperator + "Scheiben Pos X" + fieldSeperator + "Scheiben Pos Y" +
-                "Scheiben Velocity" + fieldSeperator + "Scheiben Durchmesser" + fieldSeperator + "Zeit of Existence" + 
-                fieldSeperator + "Maximale Existenzzeit" + fieldSeperator + "Anzahl an Scheiben aktuell present";
+                "Scheiben Nummer (in Sequence)" + fieldSeperator + "MousePosX" + fieldSeperator + "MousePosY" + fieldSeperator + "Scheiben Pos X" + fieldSeperator + "Scheiben Pos Y" +fieldSeperator +
+                "Scheiben Velocity" + fieldSeperator + "Scheiben Durchmesser" + fieldSeperator + "Zeit of Existence"  + fieldSeperator + 
+                "Maximale Existenzzeit" + fieldSeperator + "Anzahl an Scheiben aktuell present";
+                
+ 
+                
                 sw.WriteLine(line);
                 for (int i = 0; i < playerTrackEntries.Count; i++)
                 {
@@ -193,7 +196,7 @@ public class GameSession : MonoBehaviour
         public string getEntryString()
         {
             string line = blockIdx.ToString() + fieldSeperator + timeSinceBlockStart.ToString() +
-            fieldSeperator + eventType + fieldSeperator + isHit + fieldSeperator + scheibenNum.ToString() + 
+            fieldSeperator + eventType + fieldSeperator + isHit.ToString() + fieldSeperator + scheibenNum.ToString() + 
             fieldSeperator + posXmouse.ToString() + fieldSeperator + posYmouse.ToString() + fieldSeperator + posXScheibe.ToString() + fieldSeperator + posYScheibe.ToString() +
             fieldSeperator + velocity.ToString() + fieldSeperator + scheibenDiameter.ToString() + fieldSeperator + existenceTime.ToString() + 
             fieldSeperator + maxExistenceTime.ToString() + fieldSeperator + numScheibenPresent.ToString() ;

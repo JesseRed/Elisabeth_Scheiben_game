@@ -1,6 +1,6 @@
 {
     "numBlocks":3, 
-    "numScheiben":14, 
+    "numScheiben":4, 
     "MinimumInterScheibenDelay":1500, 
     "MaximumInterScheibenDelay":2500, 
     "MinimumVelocity":20, 

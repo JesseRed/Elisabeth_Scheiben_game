@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4476802516077851193}
   m_Layer: 0
   m_Name: Scheibe
-  m_TagString: Untagged
+  m_TagString: Scheibe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
