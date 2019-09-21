@@ -1,12 +1,13 @@
 {
-    "numBlocks":1, 
-    "numScheiben":3, 
-    "MinimumInterScheibenDelay":1.500, 
-    "MaximumInterScheibenDelay":2.500, 
+    "numBlocks":5, 
+    "numScheiben":13, 
+    "MinimumInterScheibenDelay":0.300, 
+    "MaximumInterScheibenDelay":0.500, 
     "MinimumVelocity":2.0, 
-    "MaximumVelocity":3.0, 
-    "MinimumScheibenExistenceDuration":2.500, 
-    "MaximumScheibenExistenceDuration":4.000, 
+    "MaximumVelocity":3.5, 
+    "MinimumScheibenExistenceDuration":2.000, 
+    "MaximumScheibenExistenceDuration":3.200, 
+    "MaximumScheibenDiameter":1.000,
     "Adaptive":1
 }
 

@@ -14,6 +14,7 @@ public class GameSession : MonoBehaviour
     public string fileDesignName = "Experiment1_Day1.csv";
     public Paradigma paradigma;
     public int hitsNumInBlock; // zaehlt die Treffer pro Block mit
+    public int nonHitsNumInBlock; // zaehlt die misses
     private void Awake()
     {
         SetUpSingleton();
@@ -222,6 +223,7 @@ public class GameSession : MonoBehaviour
         public float MaximumVelocity;
         public float MinimumScheibenExistenceDuration;
         public float MaximumScheibenExistenceDuration;
+        public float MaximumScheibenDiameter;
         public int Adaptive;
 
         // public static Paradigma CreateFromJSON(string jsonString)

@@ -78,6 +78,13 @@ public class Observer : MonoBehaviour
                     (float)(Time.time - status.timeLokaleScheibeInstatiate), //timeLokaleScheibeInstatiate), //  int existenceTime, 
                     (float)(status.durationOfScheibe),//durationOfScheibe, // maxExistenceTime
                     numScheibenPresent);
+            if (isHit==1){
+                gameSession.hitsNumInBlock+=1; 
+                status.wasHit = true;
+            }
+            else{
+                gameSession.nonHitsNumInBlock+=1;// wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
+            }
         }
         if (Input.GetMouseButtonUp(0) && mouse_pressed)
         {

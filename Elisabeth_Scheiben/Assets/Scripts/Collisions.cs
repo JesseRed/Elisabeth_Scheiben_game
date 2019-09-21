@@ -32,19 +32,20 @@ public class Collisions : MonoBehaviour
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (collision.name == "RechteWand")
         {
-            rb.velocity = transform.TransformDirection(rb.velocity.x * -1f, rb.velocity.y, 0f);
+            //rb.velocity = transform.TransformDirection(rb.velocity.x * -1f, rb.velocity.y, 0f);
+            //print("collistion");
         }
         if (collision.name == "DeckenWand")
         {
-            rb.velocity = transform.TransformDirection(rb.velocity.x , rb.velocity.y* -1f, 0f);
+            //rb.velocity = transform.TransformDirection(rb.velocity.x , rb.velocity.y* -1f, 0f);
         }
         if (collision.name == "LinkeWand")
         {
-            rb.velocity = transform.TransformDirection(rb.velocity.x * -1f, rb.velocity.y, 0f);
+            //rb.velocity = transform.TransformDirection(rb.velocity.x * -1f, rb.velocity.y, 0f);
         }
         if (collision.name == "BodenWand")
         {
-            rb.velocity = transform.TransformDirection(rb.velocity.x, rb.velocity.y*-1f, 0f);
+            //rb.velocity = transform.TransformDirection(rb.velocity.x, rb.velocity.y*-1f, 0f);
         }
         //print("Gameobject x collided with " + collision.name);
 

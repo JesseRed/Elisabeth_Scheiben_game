@@ -9,6 +9,7 @@ public class Status : MonoBehaviour
     public float durationOfScheibe;
     public float timeLokaleScheibeInstatiate;
     public float scale;
+    public bool wasHit = false;
     // Start is called before the first frame update
     void Start()
     {

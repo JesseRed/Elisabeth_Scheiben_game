@@ -105,6 +105,7 @@ public class ItemSpawner : MonoBehaviour
         {
             timeBlockStart = Time.time;
             // print("block index = " + block_idx);
+            
 
             gameSession.hitsNumInBlock = 0;
             for (scheibeIdxInBlock = 0; scheibeIdxInBlock < gameSession.playerData.paradigma.numScheiben; scheibeIdxInBlock++)
@@ -117,7 +118,24 @@ public class ItemSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timedelay);
 
             }
-
+            if (gameSession.playerData.paradigma.Adaptive==1){
+                // adaptiere die Parameter auf einen Zielwert von 80% Treffer
+                float cur_hit_rate = gameSession.hitsNumInBlock/gameSession.playerData.paradigma.numScheiben*100;
+                if (cur_hit_rate >80){
+                    // erniedrige die Scheibendauer um 10%
+                    gameSession.playerData.paradigma.MinimumInterScheibenDelay = gameSession.playerData.paradigma.MinimumInterScheibenDelay * 0.9f;
+                    gameSession.playerData.paradigma.MaximumInterScheibenDelay = gameSession.playerData.paradigma.MaximumInterScheibenDelay * 0.9f;                
+                    gameSession.playerData.paradigma.MinimumScheibenExistenceDuration = gameSession.playerData.paradigma.MinimumScheibenExistenceDuration * 0.9f;
+                    gameSession.playerData.paradigma.MaximumScheibenExistenceDuration = gameSession.playerData.paradigma.MaximumScheibenExistenceDuration * 0.9f;                
+                }
+                if (cur_hit_rate <60){
+                    // erniedrige die Scheibendauer um 10%
+                    gameSession.playerData.paradigma.MinimumInterScheibenDelay = gameSession.playerData.paradigma.MinimumInterScheibenDelay * 1.1f;
+                    gameSession.playerData.paradigma.MaximumInterScheibenDelay = gameSession.playerData.paradigma.MaximumInterScheibenDelay * 1.1f;                
+                    gameSession.playerData.paradigma.MinimumScheibenExistenceDuration = gameSession.playerData.paradigma.MinimumScheibenExistenceDuration * 1.1f;
+                    gameSession.playerData.paradigma.MaximumScheibenExistenceDuration = gameSession.playerData.paradigma.MaximumScheibenExistenceDuration * 1.1f;                
+                }
+            }
             //gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
             if (blockIdx < gameSession.playerData.paradigma.numBlocks - 1)
             {
@@ -138,6 +156,8 @@ public class ItemSpawner : MonoBehaviour
             else
             {
                 yield return new WaitForSeconds(4);
+                string summary = "Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
+                summarytext.SetText(summary);
                 waitpanel.SetActive(true);
                 starttext.SetText("Congratulations ...");
                 countdowntext.SetText("Task finished");
@@ -223,15 +243,19 @@ public class ItemSpawner : MonoBehaviour
 //        for (float f = 0; f < durationOfScheibe; f = f + durationOfScheibe / 200)
         {
 
-            //print("f= " +f.ToString());
-            if (newScheibe != null && !newScheibe.GetComponent<Collisions>().GetFreeze())
+            //print("time= " + Time.time);
+
+            if (newScheibe != null && !status.wasHit)// GetComponent<Collisions>().GetFreeze())
             {
                 
-                scaled = Mathf.Abs( (Time.time-timeLokaleScheibeInstatiate) - (durationOfScheibe/2) )/(durationOfScheibe/2);
-                scaled = ((scaled * -0.9f) + 1.0f);
+                scaled = Mathf.Abs((Time.time-timeLokaleScheibeInstatiate) - (durationOfScheibe/2)) /(durationOfScheibe/2);
+                scaled = ((scaled * -1.0f) + 1.0f); // hier ein Wert zwischen 0.0 und 1
+                // ich moechte aber keine lineare Scalierung sondern eine Saettigung
+                scaled = Mathf.Pow(scaled,0.4f);
+                scaled = scaled * gameSession.playerData.paradigma.MaximumScheibenDiameter;
                 // //print("index " + index.ToString());
                 // if (Time.time-timeLokaleScheibeInstatiate < durationOfScheibe / 2) { index++; } else { index--; }
-
+                //print("scale = " + scaled);
                 // float scaled = 0.1f + ((0.9f / 100f) * (float)index);
                 transf.localScale = new Vector3(scaled, scaled, 0.1f);
                 status.scale = scaled;
@@ -240,7 +264,7 @@ public class ItemSpawner : MonoBehaviour
             // yield return null;
             yield return null;
         }
-        if (newScheibe != null && !newScheibe.GetComponent<Collisions>().GetFreeze())
+        if (newScheibe != null && !status.wasHit)
         {
 
             // speichere das destroy in den Playerdata ab
@@ -259,8 +283,7 @@ public class ItemSpawner : MonoBehaviour
                 (float)(Time.time - timeLokaleScheibeInstatiate), //  int existenceTime, 
                 (float)durationOfScheibe, // maxExistenceTime
                 numScheibenPresent);
-            gameSession.hitsNumInBlock+=1; // wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
-            // der Nachteil ist, dass wir die Info ueber die Treffer erst am Ende der Sequenz haben
+           // der Nachteil ist, dass wir die Info ueber die Treffer erst am Ende der Sequenz haben
             Destroy(newScheibe);
         }
     }
