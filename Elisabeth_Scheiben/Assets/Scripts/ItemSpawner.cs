@@ -118,6 +118,7 @@ public class ItemSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timedelay);
 
             }
+            // automatic adaptation of the level of difficulty if adaptive is 
             if (gameSession.playerData.paradigma.Adaptive==1){
                 // adaptiere die Parameter auf einen Zielwert von 80% Treffer
                 float cur_hit_rate = gameSession.hitsNumInBlock/gameSession.playerData.paradigma.numScheiben*100;
