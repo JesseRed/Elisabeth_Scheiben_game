@@ -120,8 +120,11 @@ public class GameSession : MonoBehaviour
 
         public void SaveDataAsCSV()
         {
-            string path = relativeFilePath; // Application.persistentDataPath;
-            string filename = path + '/' + vpNummer + vorname + nachname + gebDatum + trainingsDay.ToString() + ".csv";
+            char x = Path.DirectorySeparatorChar;
+            string path = Application.dataPath + x + "Data";
+            print(path);
+//            string path = relativeFilePath; // Application.persistentDataPath;
+            string filename = path + x + vpNummer + vorname + nachname + gebDatum + trainingsDay.ToString() + ".csv";
             print("filename = " + filename);
             using (StreamWriter sw = new StreamWriter(filename))
             {

@@ -52,5 +52,6 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true
-    }
+    },
+    "python.pythonPath": "F:\\ProgramData\\Anaconda3\\envs\\tensorflow2\\python.exe"
 }
