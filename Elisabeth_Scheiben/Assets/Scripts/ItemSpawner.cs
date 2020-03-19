@@ -9,7 +9,7 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField] GameObject ScheibePrefab;
     [SerializeField] GameObject Dotgray;
     [SerializeField] Rigidbody2D rbScheibePrefab;
-    [SerializeField] Camera cam;
+    //[SerializeField] Camera cam;
     [Header("Scheiben Geschwindigkeit")]
     // public float minTimeBetweenScheiben = 0.5f;
     // public float maxTimeBetweenScheiben = 2.5f;
@@ -106,7 +106,7 @@ public class ItemSpawner : MonoBehaviour
             timeBlockStart = Time.time;
             // print("block index = " + block_idx);
             
-
+            //print("setting gameSession.hitsNumInBlock to 0");
             gameSession.hitsNumInBlock = 0;
             for (scheibeIdxInBlock = 0; scheibeIdxInBlock < gameSession.playerData.paradigma.numScheiben; scheibeIdxInBlock++)
             {
@@ -138,11 +138,20 @@ public class ItemSpawner : MonoBehaviour
                 }
             }
             //gameSession.playerData.AddData(1, 2, "string", 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+            //print(blockIdx + " " + gameSession.playerData.paradigma.numBlocks);
+            //print("Itemspawner gameSession.hitsNumInBlock = " + gameSession.hitsNumInBlock);
+            // warte bis alle Scheiben weg sind
+            while (GameObject.FindGameObjectsWithTag ("Scheibe").Length >0){
+                    // print("number of Scheiben = " + GameObject.FindGameObjectsWithTag ("Scheibe").Length);
+                    yield return new WaitForSeconds(0.1f);
+                }
             if (blockIdx < gameSession.playerData.paradigma.numBlocks - 1)
             {
+                yield return new WaitForSeconds(1f);
+                //print("in Anzeige");
+                //print(gameSession.hitsNumInBlock);
                 string summary = "Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
                 summarytext.SetText(summary);
-                yield return new WaitForSeconds(4);
                 waitpanel.SetActive(true);
                 countdowntext.SetText("3");
                 yield return new WaitForSeconds(1);
@@ -156,7 +165,7 @@ public class ItemSpawner : MonoBehaviour
             }
             else
             {
-                yield return new WaitForSeconds(4);
+                yield return new WaitForSeconds(1f);
                 string summary = "Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + gameSession.playerData.paradigma.numScheiben;
                 summarytext.SetText(summary);
                 waitpanel.SetActive(true);
@@ -293,7 +302,7 @@ public class ItemSpawner : MonoBehaviour
 
     private Vector3 V2W(float x, float y)
     {
-        return cam.ViewportToWorldPoint(new Vector3(x, y, 10f));
+        return Camera.main.ViewportToWorldPoint(new Vector3(x, y, 10f));
 
     }
 

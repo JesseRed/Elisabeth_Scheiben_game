@@ -6,9 +6,9 @@ public class Collisions : MonoBehaviour
 {
     [SerializeField] GameObject Dot;
     [SerializeField] GameObject Dotgray;
-    [SerializeField] Camera camx;
+  
     private bool freezeScheibe;
-    private bool mouseover = false;
+    //private bool mouseover = false;
     public Ray ray;
     // private RaycastHit hit;
     public GameObject particle;
@@ -17,7 +17,7 @@ public class Collisions : MonoBehaviour
     void Start()
     {
         freezeScheibe = false;
-        camx = FindObjectOfType<Camera>();
+        
     }
 
 

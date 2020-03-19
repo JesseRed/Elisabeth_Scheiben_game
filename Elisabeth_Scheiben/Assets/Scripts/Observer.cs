@@ -6,7 +6,7 @@ public class Observer : MonoBehaviour
 {
     [SerializeField] GameObject Dot;
     [SerializeField] GameObject Dotgray;
-    private bool mouseover = false;
+    //private bool mouseover = false;
     public Ray ray;
     public bool mouse_pressed = false;
     private GameSession gameSession;
@@ -25,11 +25,12 @@ public class Observer : MonoBehaviour
 
     void Update()
     {
-        isHit =0;
+        isHit = 0;
         //Converting Mouse Pos to 2D (vector2) World Pos
         if (Input.GetMouseButtonDown(0) && !mouse_pressed)
         {
-            isHit = 1;
+            //isHit = 1;
+            //print("hit");
             mouse_pressed = true;
             Vector2 rayPos = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
             RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0f);
@@ -45,6 +46,7 @@ public class Observer : MonoBehaviour
 
                 Destroy(hit.collider.gameObject, 1f);
                 Destroy(dot, 1f);
+                isHit = 1;
 
             }
             else
@@ -54,15 +56,36 @@ public class Observer : MonoBehaviour
                 dot.transform.position = rayPos;
                 Destroy(dot, 1f);
             }
-            float vel;
+            float velocity = 0f;
+            float scale = 0f;
+            float duration = 0f;
+            float existTime = 0f;
             int numScheibenPresent;
-            nearest_Scheibe = itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToWorldPoint(Input.mousePosition), out vel, out numScheibenPresent);
-            nearest_rbScheibe = nearest_Scheibe.GetComponent<Rigidbody2D>();
-            float velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)); //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
-            //print("velocity = "  + velocity);
-            //print("number of Scheiben present = " + numScheibenPresent);
-            Status status = nearest_Scheibe.GetComponent<Status>();
-            //print("instantiate time  = " + status.durationOfScheibe);
+            nearest_Scheibe = itemSpawner.get_nearest_Scheiben_data(Camera.main.ScreenToWorldPoint(Input.mousePosition), out velocity, out numScheibenPresent);
+            if (nearest_Scheibe != null)
+            {
+                nearest_rbScheibe = nearest_Scheibe.GetComponent<Rigidbody2D>();
+                velocity = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x, 2) + Mathf.Pow(nearest_rbScheibe.velocity.y, 2)); //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
+                                                                                                                                //print("number of Scheiben present = " + numScheibenPresent);
+                Status status = nearest_Scheibe.GetComponent<Status>();
+                scale = status.scale;
+                existTime = Time.time - status.timeLokaleScheibeInstatiate;
+                duration = status.durationOfScheibe;
+                //print("instantiate time  = " + status.durationOfScheibe);
+                if (isHit == 1)
+                {
+                    status.wasHit = true;
+                }
+            }
+            if (isHit == 1)
+            {
+                gameSession.hitsNumInBlock += 1;
+                //print("add to " + gameSession.hitsNumInBlock);
+            }
+            else
+            {
+                gameSession.nonHitsNumInBlock += 1;// wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
+            }
             gameSession.playerData.AddData(
                     itemSpawner.get_blockIdx(),
                     (float)(Time.time - itemSpawner.get_timeBlockStart()),
@@ -74,17 +97,11 @@ public class Observer : MonoBehaviour
                     Camera.main.WorldToViewportPoint(nearest_rbScheibe.transform.position).x, // Mouse position
                     Camera.main.WorldToViewportPoint(nearest_rbScheibe.transform.position).y, // Mouse position
                      velocity, // = Mathf.Sqrt(Mathf.Pow(nearest_rbScheibe.velocity.x,2) + Mathf.Pow(nearest_rbScheibe.velocity.y,2)), //(float)Mathf.Sqrt(Mathf.Pow(rb.velocity.x,2)+Mathf.Pow(rb.velocity.y,2)),
-                    (float)(status.scale), // Scheiben Diameter
-                    (float)(Time.time - status.timeLokaleScheibeInstatiate), //timeLokaleScheibeInstatiate), //  int existenceTime, 
-                    (float)(status.durationOfScheibe),//durationOfScheibe, // maxExistenceTime
+                    (float)(scale), // Scheiben Diameter
+                    (float)(existTime), //timeLokaleScheibeInstatiate), //  int existenceTime, 
+                    (float)(duration),//durationOfScheibe, // maxExistenceTime
                     numScheibenPresent);
-            if (isHit==1){
-                gameSession.hitsNumInBlock+=1; 
-                status.wasHit = true;
-            }
-            else{
-                gameSession.nonHitsNumInBlock+=1;// wenn die scheibe nach Zeit zerstoert wird, dann wurde sie nicht getroffen und wir ziehen von allen Scheiben eine ab
-            }
+
         }
         if (Input.GetMouseButtonUp(0) && mouse_pressed)
         {

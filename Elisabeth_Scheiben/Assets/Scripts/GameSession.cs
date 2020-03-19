@@ -62,9 +62,12 @@ public class GameSession : MonoBehaviour
         string nachname = GameObject.Find("NachnameText").GetComponent<TextMeshProUGUI>().text;
         string gebDat = GameObject.Find("GebDatText").GetComponent<TextMeshProUGUI>().text;
         string trainingsDaystring = GameObject.Find("TrainingsDayText").GetComponent<TextMeshProUGUI>().text;
+        trainingsDaystring = trainingsDaystring.Substring(0,trainingsDaystring.Length-1);
+        
         int trainingsDay;
         int.TryParse(trainingsDaystring, out trainingsDay);
         string vpNummerstring = GameObject.Find("VPNummerText").GetComponent<TextMeshProUGUI>().text;
+        vpNummerstring = vpNummerstring.Substring(0,vpNummerstring.Length-1);
         int vpNummer;
         int.TryParse(vpNummerstring, out vpNummer);
         string appdatapath = Application.dataPath;
