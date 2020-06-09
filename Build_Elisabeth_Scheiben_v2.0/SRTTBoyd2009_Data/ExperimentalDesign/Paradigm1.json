@@ -1,6 +1,6 @@
 {
-    "numBlocks":3, 
-    "timePerBlock": 20,
+    "numBlocks":2,
+    "timePerBlock": 10,
     "numScheiben": 0,
     "MinimumInterScheibenDelay":0.000,
     "MaximumInterScheibenDelay":0.000,
