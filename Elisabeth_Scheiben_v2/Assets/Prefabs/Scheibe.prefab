@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a00013af81304728b2be1f4309ee2433, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 74fa6f665c2dfb04b947ea4fa5b30e71, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9411765, g: 0.89411765, b: 0.25882354, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -114,7 +114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Dot: {fileID: 3412595361006812700, guid: 6404a17e5119db241bdeba7f5a20f3bf, type: 3}
   Dotgray: {fileID: 4134930324706354877, guid: ade76279c44b91140b8e869c49a655c0, type: 3}
-  camx: {fileID: 0}
   particle: {fileID: 0}
 --- !u!50 &5152610180539549014
 Rigidbody2D:
@@ -154,3 +153,12 @@ MonoBehaviour:
   timeLokaleScheibeInstatiate: 0
   scale: 0
   wasHit: 0
+  mousePosStartX: -1
+  mousePosStartY: -1
+  scheibePosStartX: -1
+  scheibePosStartY: -1
+  mousePosX: []
+  mousePosY: []
+  scheibePosX: []
+  scheibePosY: []
+  timeList: []
