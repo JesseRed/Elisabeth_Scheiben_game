@@ -40,6 +40,7 @@ public class ItemSpawner : MonoBehaviour
     //Adaptive
     // Start is called before the first frame update
     private int blockIdx;
+    private bool isBetweenBlocks;
     private int timeSinceBlockStart;
     private string eventType;
     private int isHit;
@@ -55,6 +56,9 @@ public class ItemSpawner : MonoBehaviour
     private int numScheibenPresent;
     private float timeExperimetStart;
     private float timeBlockStart;
+    private float timeBlockPause;
+    private float timeStartPause;
+    private float timeEndPause;
     private int scheibeIdxInBlock;
     private int overall_hits = 0;
     private float timeToMovementInitiation = 0;
@@ -64,6 +68,7 @@ public class ItemSpawner : MonoBehaviour
     private float specialPosForDistancingX = 0;
     private float specialPosForDistancingY = 0;
     public int last_scheibe_hit = 0;
+    private bool isPause = false;
     
     void Start()
     {
@@ -105,46 +110,11 @@ public class ItemSpawner : MonoBehaviour
         float timedelay = 0.05f;
 
         waitpanel.SetActive(true);
-        countdowntext.SetText("20");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("19");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("18");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("17");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("16");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("15");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("14");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("13");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("12");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("11");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("10");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("9");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("8");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("7");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("6");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("5");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("4");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("3");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("2");
-        yield return new WaitForSeconds(1);
-        countdowntext.SetText("1");
-        yield return new WaitForSeconds(1);
+ 
+        for (int i=gameSession.playerData.paradigma.initialCountdown; i>0 ; i--){
+            countdowntext.SetText(i.ToString());
+            yield return new WaitForSeconds(1);
+        }
         waitpanel.SetActive(false);
         timeExperimetStart = Time.time;
 
@@ -153,6 +123,7 @@ public class ItemSpawner : MonoBehaviour
         {
             num_presented_Scheiben_in_block = 0;
             timeBlockStart = Time.time;
+            timeBlockPause = 0f;
             // print("block index = " + block_idx);
             
             //print("setting gameSession.hitsNumInBlock to 0");
@@ -182,14 +153,14 @@ public class ItemSpawner : MonoBehaviour
             }
             }else{
                 print("time");
-            // wenn die Dauer eines Blocks ueber die ZEit definiert ist
-            float start_time = Time.time;
-            float time_left_in_block = gameSession.playerData.paradigma.timePerBlock;
-            bool is_block_continue = true;
-            print("time left in block  vor der schleife = " + time_left_in_block);
-            while (is_block_continue)
+                // wenn die Dauer eines Blocks ueber die ZEit definiert ist
+                float start_time = Time.time;
+                float time_left_in_block = gameSession.playerData.paradigma.timePerBlock;
+                bool is_block_continue = true;
+                print("time left in block  vor der schleife = " + time_left_in_block);
+                while (is_block_continue)
             {
-                time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time);
+                time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time) + timeBlockPause;
                 print("time left in block = " + time_left_in_block);
                 print("scheibe num in block " + num_presented_Scheiben_in_block);
                 // print("Sequence_index = " + scheibeIdxInBlock);
@@ -208,13 +179,13 @@ public class ItemSpawner : MonoBehaviour
                     while (last_scheibe_hit == 0){
 
                         yield return new WaitForSeconds(timedelay);
-                        time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time);
+                        time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time) + timeBlockPause;
                         if (time_left_in_block<=0){
                             break;
                         }
                     }
                 }
-                time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time);
+                time_left_in_block = gameSession.playerData.paradigma.timePerBlock- (Time.time-start_time) + timeBlockPause;
                 if (time_left_in_block<=0){is_block_continue=false;}
                 num_presented_Scheiben_in_block+=1;
             }
@@ -252,50 +223,20 @@ public class ItemSpawner : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 //print("in Anzeige");
                 //print(gameSession.hitsNumInBlock);
-                string summary = "Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + num_presented_Scheiben_in_block; //gameSession.playerData.paradigma.numScheiben;
+                string summary = "press space for pause ... Getroffene Scheiben: " + gameSession.hitsNumInBlock + "/" + num_presented_Scheiben_in_block; //gameSession.playerData.paradigma.numScheiben;
                 summarytext.SetText(summary);
                 waitpanel.SetActive(true);
-                countdowntext.SetText("20");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("19");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("18");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("17");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("16");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("15");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("14");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("13");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("12");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("11");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("10");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("9");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("8");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("7");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("6");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("5");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("4");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("3");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("2");
-                yield return new WaitForSeconds(1);
-                countdowntext.SetText("1");
-                yield return new WaitForSeconds(1);
+                isBetweenBlocks = true;
+                for (int i=gameSession.playerData.paradigma.initialCountdown; i>0 ; i--){
+                    countdowntext.SetText(i.ToString());
+
+                    yield return new WaitForSeconds(1);
+                    while (isPause){
+                        yield return null;
+                    }
+                }
                 waitpanel.SetActive(false);
+                isBetweenBlocks = false;
             }
             else
             {
@@ -309,23 +250,30 @@ public class ItemSpawner : MonoBehaviour
             gameSession.hitsNumInGame = gameSession.hitsNumInGame + gameSession.hitsNumInBlock;
             gameSession.nonHitsNumInGame = gameSession.nonHitsNumInGame + gameSession.nonHitsNumInBlock;
             gameSession.scheibenNumInGame = gameSession.scheibenNumInGame + num_presented_Scheiben_in_block; //gameSession.playerData.paradigma.numScheiben;
+            print("saving Data");
+            gameSession.playerData.SaveDataAsCSV();
         }
         //print("startPresentation Coroutine am Ende");
-        print("saving Data");
-        gameSession.playerData.SaveDataAsCSV();
+        //print("saving Data");
+        //gameSession.playerData.SaveDataAsCSV();
         yield return new WaitForSeconds(1);
         countdowntext.SetText("Weiter with SpaceBar");
-        while(!Input.GetKeyDown(KeyCode.Space))
+        while(!Input.GetKey(KeyCode.Space))
         {
             yield return null;
         }
         starttext.SetText("Scheibenzahl = " + gameSession.scheibenNumInGame.ToString());
         summarytext.SetText("getrof. Scheib.: " + gameSession.hitsNumInGame.ToString() + " NonTreffer " + gameSession.nonHitsNumInGame.ToString());
-        while(!Input.GetKeyDown(KeyCode.Space))
+        yield return new WaitForSeconds(1f);
+        while(!Input.GetKey(KeyCode.Space))
         {
             yield return null;
         }
-        countdowntext.SetText("the end");
+        // countdowntext.SetText("the end");
+        // while(!Input.GetKey(KeyCode.Escape))
+        // {
+        //     yield return new WaitForSeconds(1f);
+        // }
         Application.Quit();
     }
 
@@ -333,7 +281,25 @@ public class ItemSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
+        if (isBetweenBlocks){
+            if (Input.GetKeyDown(KeyCode.Space)) {
+            if (isPause) {
+                isPause = false;
+                //waitpanel.SetActive(false);
+                timeEndPause = Time.time;
+                timeBlockPause += timeEndPause - timeStartPause;                
+            }
+            else {
+                isPause = true;
+                timeStartPause = Time.time;
+                //waitpanel.SetActive(true);
+                countdowntext.SetText("pause ... weiter mit space");
+            }
+        }
+        }
     }
 
 
@@ -410,7 +376,7 @@ public class ItemSpawner : MonoBehaviour
         // Add the new Scheibe to the Player Data
            gameSession.playerData.AddData(
                 blockIdx,
-                (float)(Time.time - timeBlockStart),
+                (float)(Time.time - timeBlockStart - timeBlockPause),
                 "instantiate",
                 (int)0, // Hit
                 scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
@@ -472,9 +438,10 @@ public class ItemSpawner : MonoBehaviour
         {
 
             // speichere das destroy in den Playerdata ab
+            print("save destroy with schiebeIdxInBlock = " + scheibeIdxInBlock);
             gameSession.playerData.AddData(
                 blockIdx,
-                (float)(Time.time - timeBlockStart),
+                (float)(Time.time - timeBlockStart - timeBlockPause),
                 "destroy",
                 (int)0, // Hit
                 scheibeIdxInBlock, // Number der Scheibe im aktuellen Block
@@ -512,6 +479,9 @@ public class ItemSpawner : MonoBehaviour
 
     public float get_timeBlockStart(){
         return timeBlockStart;
+    }
+    public float get_timeBlockPause(){
+        return timeBlockPause;
     }
 
     public int get_scheibeIdxInBlock(){

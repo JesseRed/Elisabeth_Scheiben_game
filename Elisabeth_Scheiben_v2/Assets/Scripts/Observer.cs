@@ -20,6 +20,7 @@ public class Observer : MonoBehaviour
     private float cursorPathError = -1;
     private float finalPosError = -1; 
     private float maxMovementVelocity = -1;
+
     // private RaycastHit hit;
     // Start is called before the first frame update
     void Start()
@@ -32,6 +33,16 @@ public class Observer : MonoBehaviour
     void Update()
     {
         isHit = 0;
+                // Pause setzen
+
+
+
+
+
+
+
+
+
         //Converting Mouse Pos to 2D (vector2) World Pos
         if (Input.GetMouseButtonDown(0) && !mouse_pressed)
         {
@@ -58,8 +69,8 @@ public class Observer : MonoBehaviour
                     cursorPathError = hitted_scheibe_status.get_cursorPathError();
                     finalPosError = hitted_scheibe_status.get_finalPosError();
                     maxMovementVelocity = hitted_scheibe_status.get_maxMovementVelocity();
-                    Destroy(collidedObject, 1f);
-                    Destroy(dot, 1f);
+                    Destroy(collidedObject, gameSession.playerData.paradigma.timeBetweenHitAndDisappear);
+                    Destroy(dot, gameSession.playerData.paradigma.timeBetweenHitAndDisappear+0.1f);
                     isHit = 1;
                     itemSpawner.last_scheibe_hit = 1;
                 }                
@@ -108,7 +119,7 @@ public class Observer : MonoBehaviour
             if (nearest_rbScheibe != null){
             gameSession.playerData.AddData(
                     itemSpawner.get_blockIdx(),
-                    (float)(Time.time - itemSpawner.get_timeBlockStart()),
+                    (float)(Time.time - itemSpawner.get_timeBlockStart() - itemSpawner.get_timeBlockPause()),
                     "mouse",
                     isHit, // Hit
                     itemSpawner.get_scheibeIdxInBlock(), // Number der Scheibe im aktuellen Block

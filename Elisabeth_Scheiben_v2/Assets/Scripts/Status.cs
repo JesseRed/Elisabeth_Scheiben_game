@@ -62,7 +62,7 @@ public class Status : MonoBehaviour
         float cursorPathError = -1;
 
         float distpowx = Mathf.Pow(mousePosX[0]-scheibePosX[scheibePosX.Count-1],2);
-        float distpowy = Mathf.Pow(mousePosY[0]-scheibePosY[scheibePosX.Count-1],2);
+        float distpowy = Mathf.Pow(mousePosY[0]-scheibePosY[scheibePosY.Count-1],2);
         float optimal_path_length = Mathf.Sqrt(distpowx + distpowy);        
         float summedMouseMovements = 0.0f;
 

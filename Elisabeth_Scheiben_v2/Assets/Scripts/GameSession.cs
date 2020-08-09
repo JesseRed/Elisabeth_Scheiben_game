@@ -11,7 +11,8 @@ public class GameSession : MonoBehaviour
     public bool isInitialized = false;
     public string relativeSavePath = "Data";
     public string relativeReadPath = "ExperimentalDesign";
-    public string fileDesignName = "Experiment1_Day1.csv";
+    // public string fileDesignName = "Experiment1_Day1.csv";
+    public string fileDesignName = "Paradigma1.json";
     public Paradigma paradigma;
     public int hitsNumInBlock; // zaehlt die Treffer pro Block mit
     public int nonHitsNumInBlock; // zaehlt die misses
@@ -61,25 +62,40 @@ public class GameSession : MonoBehaviour
         //GameObject tmp = FindObjectOfType<VornameText>;
         //GameObject tmp = GameObject.Find("VornameText");
         //TextMeshProUGUI tmp2 = tmp.GetComponent<TextMeshProUGUI>();
-        string vorname = GameObject.Find("VornameText").GetComponent<TextMeshProUGUI>().text;
-        string nachname = GameObject.Find("NachnameText").GetComponent<TextMeshProUGUI>().text;
-        string gebDat = GameObject.Find("GebDatText").GetComponent<TextMeshProUGUI>().text;
-        string trainingsDaystring = GameObject.Find("TrainingsDayText").GetComponent<TextMeshProUGUI>().text;
-        trainingsDaystring = trainingsDaystring.Substring(0,trainingsDaystring.Length-1);
+
+        string vorname = GameObject.Find("VornameInputField").GetComponent<TMP_InputField>().text;
+        string nachname = GameObject.Find("NachnameInputField").GetComponent<TMP_InputField>().text;
+        string gebDat = GameObject.Find("GebDatumInputField").GetComponent<TMP_InputField>().text;
+        string trainingsDaystring = GameObject.Find("BehandlungsgruppeInputField").GetComponent<TMP_InputField>().text;
+        int trainingsDay = int.Parse(trainingsDaystring);
         
-        int trainingsDay;
-        int.TryParse(trainingsDaystring, out trainingsDay);
-        string vpNummerstring = GameObject.Find("VPNummerText").GetComponent<TextMeshProUGUI>().text;
-        vpNummerstring = vpNummerstring.Substring(0,vpNummerstring.Length-1);
-        int vpNummer;
-        int.TryParse(vpNummerstring, out vpNummer);
-        string appdatapath = Application.dataPath;
+        string vpNummerstring = GameObject.Find("RandomNummerInputField").GetComponent<TMP_InputField>().text;
+        int vpNummer = int.Parse(vpNummerstring);
+
+
+
+        // string vorname = GameObject.Find("VornameText").GetComponent<TextMeshProUGUI>().text;
+        // string nachname = GameObject.Find("NachnameText").GetComponent<TextMeshProUGUI>().text;
+        // string gebDat = GameObject.Find("GebDatText").GetComponent<TextMeshProUGUI>().text;
+        // string trainingsDaystring = GameObject.Find("TrainingsDayText").GetComponent<TextMeshProUGUI>().text;
+        // trainingsDaystring = trainingsDaystring.Substring(0,trainingsDaystring.Length-1);
+        
+        // int trainingsDay;
+        // int.TryParse(trainingsDaystring, out trainingsDay);
+        // string vpNummerstring = GameObject.Find("VPNummerText").GetComponent<TextMeshProUGUI>().text;
+        // vpNummerstring = vpNummerstring.Substring(0,vpNummerstring.Length-1);
+        // int vpNummer;
+        // int.TryParse(vpNummerstring, out vpNummer);
+        string appdatapath = Application.streamingAssetsPath;
+        print("appdatapath = " + appdatapath);
+        
         string relative_path_file = Path.Combine(relativeReadPath, fileDesignName);
+        print("relativeSavePath = " + relativeSavePath);
         //string jsonString = Path.Combine(appdatapath, relative_path_file);
         char x = Path.DirectorySeparatorChar;
-        string jsonFileName = Application.dataPath + x + relativeReadPath + x + fileDesignName; //Path.DirectorySeparatorChar Combine(appdatapath, relative_path_file);
+        string jsonFileName = Application.streamingAssetsPath + x + relativeReadPath + x + fileDesignName; //Path.DirectorySeparatorChar Combine(appdatapath, relative_path_file);
                                                                                                 //        string jsonString = "G:\\Unity\\Elisabeth_Scheiben_game\\Elisabeth_Scheiben\\Assets\\ExperimentalDesign\\Paradigm1.json";
-                                                                                                //string jsonString = "G:/Unity/Elisabeth_Scheiben_game/Elisabeth_Scheiben/Assets/ExperimentalDesign/Paradigm2.json";
+                                                                                                        //string jsonString = "G:/Unity/Elisabeth_Scheiben_game/Elisabeth_Scheiben/Assets/ExperimentalDesign/Paradigm2.json";
         string jsonString = File.ReadAllText(jsonFileName);
 
         playerData = new PlayerData(vorname, nachname, gebDat, trainingsDay, vpNummer, jsonString);
@@ -101,7 +117,7 @@ public class GameSession : MonoBehaviour
         private List<PlayerTrackEntry> playerTrackEntries;
         public char lineSeperater = '\n'; // It defines line seperate character
         public char fieldSeperator = ';'; // It defines field seperate chracter
-        public string relativeFilePath = "Assets/Data/";
+    
 
 
         // construktor .... ohne die persoenlichen Infos geht nix
@@ -127,7 +143,7 @@ public class GameSession : MonoBehaviour
         public void SaveDataAsCSV()
         {
             char x = Path.DirectorySeparatorChar;
-            string path = Application.dataPath + x + "Data";
+            string path = Application.streamingAssetsPath + x + "Data";
             print(path);
 //            string path = relativeFilePath; // Application.persistentDataPath;
             string filename = path + x + "VP_" + vpNummer + "_TD_" + trainingsDay.ToString() + "_" + vorname + "_" + nachname + "_" + gebDatum.Replace('.','-') + ".csv";
@@ -241,6 +257,9 @@ public class GameSession : MonoBehaviour
     [System.Serializable]
     public class Paradigma
     {
+        public int initialCountdown;
+
+        public float timeBetweenHitAndDisappear;
         public int numBlocks;
         public float timePerBlock;
         public int numScheiben;
