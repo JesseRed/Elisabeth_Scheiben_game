@@ -1,0 +1,18 @@
+{
+    "numBlocks":2,
+    "timePerBlock": 10,
+    "numScheiben": 0,
+    "MinimumInterScheibenDelay":0.0,
+    "MaximumInterScheibenDelay":0.0,
+    "MinimumVelocity":0.0, 
+    "MaximumVelocity":0.0, 
+    "MinimumScheibenExistenceDuration":0.0,
+    "MaximumScheibenExistenceDuration":40.000,
+    "MinimumScheibenDiameter":1.000,
+    "MaximumScheibenDiameter":1.000,
+    "MinimumScheibenDistance":0.3, 
+    "InstantNewScheibeAfterHit": 1,
+    "Adaptive":0
+}
+
+
