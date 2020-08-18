@@ -511,17 +511,17 @@ MonoBehaviour:
   m_VerticalScrollbar: {fileID: 0}
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 2
+  m_ContentType: 0
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 4
+  m_KeyboardType: 0
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 2
+  m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 30
-  m_CharacterLimit: 2
+  m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -3950,7 +3950,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Gruppe (1/2/3)
+  m_text: ErrorBased/ErrorLess/Mismatch
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3978,8 +3978,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4019,10 +4019,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1416085814}
-    characterCount: 14
+    characterCount: 29
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 4
+    spaceCount: 0
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -5355,6 +5355,8 @@ MonoBehaviour:
     trainingsDay: 0
     vpNummer: 0
     paradigma:
+      initialCountdown: 0
+      timeBetweenHitAndDisappear: 0
       numBlocks: 0
       timePerBlock: 0
       numScheiben: 0
@@ -5371,13 +5373,14 @@ MonoBehaviour:
       Adaptive: 0
     lineSeperater: 0
     fieldSeperator: 0
-    relativeFilePath: 
   isTutorial: 0
   isInitialized: 0
   relativeSavePath: Data
   relativeReadPath: ExperimentalDesign
   fileDesignName: Paradigm1.json
   paradigma:
+    initialCountdown: 0
+    timeBetweenHitAndDisappear: 0
     numBlocks: 0
     timePerBlock: 0
     numScheiben: 0
