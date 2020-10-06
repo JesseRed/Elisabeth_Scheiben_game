@@ -1,8 +1,8 @@
 {
-    "initialCountdown":20,
+    "initialCountdown":30,
     "timeBetweenHitAndDisappear":0.1,
     "numBlocks":12,
-    "timePerBlock": 40,
+    "timePerBlock": 30,
     "numScheiben": 0,
     "MinimumInterScheibenDelay":0.0,
     "MaximumInterScheibenDelay":0.0,
